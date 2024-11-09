@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectroHogar", "TemplateTPIntegrador\ElectroHogar.csproj", "{FBB76CE5-28CB-4176-942F-9773F50FF7A8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D70D39DA-312D-45DA-A378-FD222EC9672F} = {D70D39DA-312D-45DA-A378-FD222EC9672F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Negocio", "Negocio\Negocio.csproj", "{C45177FE-6854-49E9-AA70-13FD2CDE1F69}"
 EndProject

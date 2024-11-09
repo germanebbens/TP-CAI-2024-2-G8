@@ -1,6 +1,6 @@
-﻿namespace TemplateTPIntegrador
+﻿namespace ElectroHogar
 {
-    partial class InitForm
+    partial class InitFormVendedor
     {
         /// <summary>
         /// Required designer variable.
@@ -28,24 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtDatos = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // txtDatos
+            // label1
             // 
-            this.txtDatos.Location = new System.Drawing.Point(156, 99);
-            this.txtDatos.Name = "txtDatos";
-            this.txtDatos.Size = new System.Drawing.Size(100, 22);
-            this.txtDatos.TabIndex = 0;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(252, 90);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Form Vendedor";
             // 
-            // InitForm
+            // InitFormVendedor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.txtDatos);
-            this.Name = "InitForm";
-            this.Text = "InitForm";
+            this.Controls.Add(this.label1);
+            this.Name = "InitFormVendedor";
+            this.Text = "InitFormVendedor";
+            this.Load += new System.EventHandler(this.InitFormVendedor_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -53,6 +56,6 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtDatos;
+        private System.Windows.Forms.Label label1;
     }
 }

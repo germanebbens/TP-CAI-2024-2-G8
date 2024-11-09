@@ -46,33 +46,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="InitForm.cs">
+    <Compile Include="Forms\InitForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InitForm.Designer.cs">
+    <Compile Include="Forms\InitForm.Designer.cs">
       <DependentUpon>InitForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="InitFormVendedor.cs">
+    <Compile Include="Forms\InitFormVendedor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InitFormVendedor.Designer.cs">
+    <Compile Include="Forms\InitFormVendedor.Designer.cs">
       <DependentUpon>InitFormVendedor.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Utils\FormHelper.cs" />
+    <Compile Include="Utils\Validations.cs" />
+    <EmbeddedResource Include="Forms\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InitForm.resx">
+    <EmbeddedResource Include="Forms\InitForm.resx">
       <DependentUpon>InitForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InitFormVendedor.resx">
+    <EmbeddedResource Include="Forms\InitFormVendedor.resx">
       <DependentUpon>InitFormVendedor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -108,5 +110,6 @@
       <Name>Negocio</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

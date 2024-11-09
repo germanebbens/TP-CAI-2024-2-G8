@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using ElectroHogar.Forms;
 
-namespace TemplateTPIntegrador
+namespace ElectroHogar
 {
     internal static class Program
     {
@@ -16,7 +14,7 @@ namespace TemplateTPIntegrador
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new LoginForm());
         }
     }
 }

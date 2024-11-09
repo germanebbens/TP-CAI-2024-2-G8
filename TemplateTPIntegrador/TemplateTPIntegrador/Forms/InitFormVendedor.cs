@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TemplateTPIntegrador
+namespace ElectroHogar
 {
     public partial class InitFormVendedor : Form
     {
