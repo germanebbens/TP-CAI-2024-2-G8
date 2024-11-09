@@ -1,9 +1,6 @@
 ﻿using Persistencia.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistencia
 {
@@ -26,7 +23,7 @@ namespace Persistencia
             DBHelper dbHelper = new DBHelper("intentos_login");
             String valor = dbHelper.Buscar(username);
             
-            if(valor == null)
+            if (valor == null)
             {
                 valor = "0";
             }

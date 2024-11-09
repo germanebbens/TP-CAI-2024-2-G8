@@ -1,13 +1,10 @@
-﻿using Datos;
-using Newtonsoft.Json;
-using Persistencia.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Datos;
+using Persistencia.Utils;
 
 namespace Persistencia
 {
@@ -21,7 +18,6 @@ namespace Persistencia
             datos.Add("nombreUsuario", username);
             datos.Add("contraseña", password);
 
-            // Convert the data to a JSON string
             var jsonData = JsonConvert.SerializeObject(datos);
 
             HttpResponseMessage response = WebHelper.Post("Usuario/Login", jsonData);
@@ -44,10 +40,8 @@ namespace Persistencia
 
         public List<UsuarioWS> buscarDatosUsuario()
         {
-            List<UsuarioWS> clientes = new List<UsuarioWS>();
-
             HttpResponseMessage response = WebHelper.Get("Usuario/TraerUsuariosActivos?id=" + adminId);
-                
+
             if (response.IsSuccessStatusCode)
             {
                 var contentStream = response.Content.ReadAsStringAsync().Result;
@@ -59,8 +53,6 @@ namespace Persistencia
                 Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
                 throw new Exception("Error al momento de buscar los usuarios");
             }
-
         }
-
     }
 }
