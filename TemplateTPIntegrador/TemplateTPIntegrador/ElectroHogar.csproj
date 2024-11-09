@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FBB76CE5-28CB-4176-942F-9773F50FF7A8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TemplateTPIntegrador</RootNamespace>
-    <AssemblyName>TemplateTPIntegrador</AssemblyName>
+    <RootNamespace>ElectroHogar</RootNamespace>
+    <AssemblyName>ElectroHogar</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -83,6 +83,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

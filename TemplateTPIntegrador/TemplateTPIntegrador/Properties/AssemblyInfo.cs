@@ -1,16 +1,17 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("TemplateTPIntegrador")]
+[assembly: AssemblyTitle("ElectroHogar")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Banco Provincia de Buenos Aires")]
-[assembly: AssemblyProduct("TemplateTPIntegrador")]
-[assembly: AssemblyCopyright("Copyright © Banco Provincia de Buenos Aires 2024")]
+[assembly: AssemblyCompany("ElectroHogar")]
+[assembly: AssemblyProduct("ElectroHogar")]
+[assembly: AssemblyCopyright("Copyright © ElectroHogar")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,3 +35,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguage("es-BZ")]
