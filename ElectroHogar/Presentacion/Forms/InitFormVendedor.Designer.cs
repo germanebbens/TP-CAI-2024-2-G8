@@ -1,4 +1,4 @@
-﻿namespace ElectroHogar
+﻿namespace Presentacion.Forms
 {
     partial class InitFormVendedor
     {

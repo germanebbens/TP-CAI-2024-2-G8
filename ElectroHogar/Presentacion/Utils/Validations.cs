@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace ElectroHogar.Utils
+namespace Presentacion.Utils
 {
     public static class Validations
     {

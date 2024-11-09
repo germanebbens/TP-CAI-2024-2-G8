@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ElectroHogar
+namespace Presentacion.Forms
 {
     public partial class InitFormVendedor : Form
     {

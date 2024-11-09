@@ -33,9 +33,10 @@
 		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
 	<ItemGroup>
-		<Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+		<Reference Include="Newtonsoft.Json">
 			<HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
 		</Reference>
+		<Reference Include="System.Configuration" />
 		<Reference Include="System" />
 		<Reference Include="System.Core" />
 		<Reference Include="System.Xml.Linq" />
@@ -49,6 +50,7 @@
 		<Reference Include="System.Xml" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Include="Configs.cs" />
 		<Compile Include="Presentacion\Forms\LoginForm.cs">
 			<SubType>Form</SubType>
 		</Compile>
@@ -69,7 +71,8 @@
 		</Compile>
 		<Compile Include="Presentacion\Utils\FormHelper.cs" />
 		<Compile Include="Presentacion\Utils\Validations.cs" />
-		<Compile Include="Negocio\Controllers\LoginNegocio.cs" />
+		<Compile Include="Negocio\LoginNegocio.cs" />
+		<Compile Include="Negocio\Utils\LoginUtils.cs" />
 		<Compile Include="Persistencia\LoginDB.cs" />
 		<Compile Include="Persistencia\LoginWS.cs" />
 		<Compile Include="Persistencia\Utils\DBHelper.cs" />

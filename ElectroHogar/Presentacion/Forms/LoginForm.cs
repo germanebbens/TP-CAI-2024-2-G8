@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
-using Negocio.Controllers;
-using ElectroHogar.Utils;
+using Negocio;
+using Negocio.Utils;
+using Presentacion.Utils;
 
-namespace ElectroHogar.Forms
+namespace Presentacion.Forms
 {
     public partial class LoginForm : Form
     {
@@ -105,17 +106,33 @@ namespace ElectroHogar.Forms
             button1.Enabled = !deshabilitar;
         }
 
-        private void ManejarLoginExitoso(LoginNegocio.LoginResult resultado)
+        private void ManejarLoginExitoso(LoginResult resultado)
         {
-            FormHelper.MostrarEstado(lblEstado, $"Bienvenido! Iniciando sesión como {resultado.Mensaje}...");
-            System.Threading.Thread.Sleep(1000); // Pequeña pausa para mostrar el mensaje
+            FormHelper.MostrarEstado(lblEstado, $"Bienvenido! Iniciando sesión como {resultado.Perfil}...");
+            System.Threading.Thread.Sleep(1000);
 
-            // TODO: Aquí iría la lógica para abrir el formulario correspondiente según el perfil
-            MessageBox.Show($"Login exitoso. Perfil: {resultado.Mensaje}",
-                "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form formulario;
+            switch (resultado.Perfil)
+            {
+                case TipoPerfil.Administrador:
+                    //formulario = new AdminForm();  // TODO: Crear estos formularios
+                    break;
+                case TipoPerfil.Supervisor:
+                    //formulario = new SupervisorForm();
+                    break;
+                case TipoPerfil.Vendedor:
+                    //formulario = new VendedorForm();
+                    break;
+                default:
+                    throw new Exception($"Perfil no manejado: {resultado.Perfil}");
+            }
+
+            this.Hide();
+            //formulario.ShowDialog();
+            this.Close();
         }
 
-        private void ManejarLoginFallido(LoginNegocio.LoginResult resultado)
+        private void ManejarLoginFallido(LoginResult resultado)
         {
             FormHelper.MostrarEstado(lblEstado, resultado.Mensaje, true);
             txtPassword.Clear();

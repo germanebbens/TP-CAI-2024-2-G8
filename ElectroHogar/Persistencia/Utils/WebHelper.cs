@@ -1,85 +1,99 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using ElectroHogar.Config;
+using Presentacion.Utils;
 
 namespace Persistencia.Utils
 {
     public class WebHelper
     {
-        static HttpClient httpClient = new HttpClient();
-        static String rutaBase = "https://cai-tp.azurewebsites.net/api/";
-        public static HttpResponseMessage Get(string url)
+        private static readonly HttpClient _httpClient;
+        private static readonly string _baseUrl;
+        private const string _contentType = "application/json";
+
+        // static constructor to init httpclient (singleton)
+        static WebHelper()
         {
-            var uri = rutaBase + url;
+            _httpClient = new HttpClient();
+            _baseUrl = ConfigHelper.GetValue("WebServiceBaseUrl");
 
-            HttpResponseMessage response = httpClient.GetAsync(uri).Result;  // Blocking call!
-
-            return response;
+            // needed configuration to always acept JSON response
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
+            );
         }
 
-        public static HttpResponseMessage Post(string url, string jsonRequest)
+        private static Uri BuildUri(string endpoint)
         {
-            var uri = rutaBase + url;
-
-            var data = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = httpClient.PostAsync(uri, data).Result;
-
-            return response;
-
-        }
-        public static HttpResponseMessage Put(string url, string jsonRequest)
-        {
-            var uri = rutaBase + url;
-
-            var data = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = httpClient.PutAsync(uri, data).Result;
-
-            return response;
-
+            return new Uri($"{_baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}");
         }
 
-        public static HttpResponseMessage Patch(string path, string jsonRequest)
+        private static StringContent CreateJsonContent(string jsonData)
         {
-            var uri = rutaBase + path;
-
-            var data = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-            var request =
-                new HttpRequestMessage(new HttpMethod("PATCH"), uri)
-                {
-                    Content = data
-                };
-
-            HttpResponseMessage response = httpClient.SendAsync(request).Result;
-
-            return response;
+            return new StringContent(jsonData, Encoding.UTF8, _contentType);
         }
 
-        public static HttpResponseMessage Delete(string url)
+        private static HttpResponseMessage ExecuteRequest(Func<Task<HttpResponseMessage>> request)
         {
-            var uri = rutaBase + url;
-
-            HttpResponseMessage response = httpClient.DeleteAsync(uri).Result;
-
-            return response;
+            try
+            {
+                return request().Result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en la comunicación con el servidor: {ex.Message}", ex);
+            }
         }
-        public static HttpResponseMessage DeleteWithBody(string url, string jsonRequest)
-        {
-            var uri = rutaBase + url;
 
-            HttpRequestMessage request = new HttpRequestMessage
+        public static HttpResponseMessage Get(string endpoint)
+        {
+            return ExecuteRequest(() => _httpClient.GetAsync(BuildUri(endpoint)));
+        }
+
+        public static HttpResponseMessage Post(string endpoint, string jsonRequest)
+        {
+            return ExecuteRequest(() => _httpClient.PostAsync(
+                BuildUri(endpoint),
+                CreateJsonContent(jsonRequest)
+            ));
+        }
+
+        public static HttpResponseMessage Put(string endpoint, string jsonRequest)
+        {
+            return ExecuteRequest(() => _httpClient.PutAsync(
+                BuildUri(endpoint),
+                CreateJsonContent(jsonRequest)
+            ));
+        }
+
+        public static HttpResponseMessage Patch(string endpoint, string jsonRequest)
+        {
+            var request = new HttpRequestMessage(new HttpMethod("PATCH"), BuildUri(endpoint))
+            {
+                Content = CreateJsonContent(jsonRequest)
+            };
+
+            return ExecuteRequest(() => _httpClient.SendAsync(request));
+        }
+
+        public static HttpResponseMessage Delete(string endpoint)
+        {
+            return ExecuteRequest(() => _httpClient.DeleteAsync(BuildUri(endpoint)));
+        }
+
+        public static HttpResponseMessage DeleteWithBody(string endpoint, string jsonRequest)
+        {
+            var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Delete,
-                RequestUri = new Uri(uri),
-                Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
+                RequestUri = BuildUri(endpoint),
+                Content = CreateJsonContent(jsonRequest)
             };
-            HttpResponseMessage response = httpClient.SendAsync(request).Result;
 
-            return response;
+            return ExecuteRequest(() => _httpClient.SendAsync(request));
         }
     }
 }
