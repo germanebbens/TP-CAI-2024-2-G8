@@ -40,13 +40,13 @@ namespace ElectroHogar.Persistencia
             }
         }
 
-        public List<UsuarioWS> buscarDatosUsuario()
+        public List<UsuarioDef> buscarDatosUsuario()
         {
             HttpResponseMessage response = WebHelper.Get("Usuario/TraerUsuariosActivos?id=" + adminId);
             if (response.IsSuccessStatusCode)
             {
                 var contentStream = response.Content.ReadAsStringAsync().Result;
-                List<UsuarioWS> listadoUsuarios = JsonConvert.DeserializeObject<List<UsuarioWS>>(contentStream);
+                List<UsuarioDef> listadoUsuarios = JsonConvert.DeserializeObject<List<UsuarioDef>>(contentStream);
                 return listadoUsuarios;
             }
             else

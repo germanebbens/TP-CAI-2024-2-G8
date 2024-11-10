@@ -51,7 +51,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configs.cs" />
+    <Compile Include="Negocio\NuevoUsuario.cs" />
     <Compile Include="Negocio\Perfiles.cs" />
+    <Compile Include="Persistencia\ClavesTemporalesDB.cs" />
+    <Compile Include="Persistencia\NuevoUsuarioWS.cs" />
     <Compile Include="Presentacion\Forms\HomeForm.cs">
       <SubType>Form</SubType>
     </Compile>
