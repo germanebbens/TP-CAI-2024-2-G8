@@ -6,55 +6,47 @@ namespace ElectroHogar.Persistencia
 {
     public class LoginDB
     {
-        public void guardarIntento(String username)
+        private readonly DBHelper _dbHelper;
+
+        public LoginDB()
         {
-            DBHelper dbHelper = new DBHelper("intentos_login");
-            dbHelper.Insertar(username, "1");
+            _dbHelper = new DBHelper("intentos_login");
         }
 
-        public void actualizarIntento(String key, String newValue)
+        public void guardarIntento(string username)
         {
-            DBHelper dbHelper = new DBHelper("intentos_login");
-            dbHelper.Modificar(key, newValue);
+            _dbHelper.Insertar(username, "1");
         }
 
-        public int obtenerIntentos(String username)
+        public void actualizarIntento(string key, string newValue)
         {
-            DBHelper dbHelper = new DBHelper("intentos_login");
-            String valor = dbHelper.Buscar(username);
-            
+            _dbHelper.Modificar(key, newValue);
+        }
+
+        public int obtenerIntentos(string username)
+        {
+            var valor = _dbHelper.Buscar(username);
             if (valor == null)
             {
-                valor = "0";
+                return 0;
             }
-
             return int.Parse(valor);
-
         }
 
-        public String obtenerArray(String key)
+        public string obtenerArray(string key)
         {
-            DBHelper dbHelper = new DBHelper("intentos_login");
-            String valor = dbHelper.Buscar(key);
-            return valor;
+            return _dbHelper.Buscar(key);
         }
 
-        public void modificarDatos(String key, String newValue)
+        public void modificarDatos(string key, string newValue)
         {
-            DBHelper dbHelper = new DBHelper("intentos_login");
-            dbHelper.Modificar(key, newValue);
+            _dbHelper.Modificar(key, newValue);
         }
 
-        public void guardarArray(List<String> datos)
+        public void guardarArray(List<string> datos)
         {
-            DBHelper dbHelper = new DBHelper("intentos_login");
-            String correosElectronicos = "";
-            foreach(String correo in datos)
-            {
-                correosElectronicos = correosElectronicos + "," + correo;
-            }
-            dbHelper.Insertar("correosElectronicos", correosElectronicos);
-
+            string correosElectronicos = string.Join(",", datos);
+            _dbHelper.Insertar("correosElectronicos", correosElectronicos);
         }
     }
 }

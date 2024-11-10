@@ -1,94 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using ElectroHogar.Config;
 
 namespace ElectroHogar.Persistencia.Utils
 {
     public class DBHelper
     {
-        private string filePath;
+        private readonly string _filePath;
 
-        // Static constructor to set the default file path
-        public DBHelper(String dataBaseName)
+        public DBHelper(string dataBaseName)
         {
-            string solutionDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            filePath = Path.Combine(solutionDirectory, dataBaseName + ".txt");
+            var rutaBase = Path.GetDirectoryName(typeof(DBHelper).Assembly.Location);
+            var rutaArchivos = ConfigHelper.GetValue("RutaArchivos");
+            _filePath = Path.Combine(rutaBase, rutaArchivos, $"{dataBaseName}.json");
 
-            // Create the file if it doesn't exist
-            if (!File.Exists(filePath))
+            // Crear el archivo si no existe
+            if (!File.Exists(_filePath))
             {
-                File.Create(filePath).Close();
+                Directory.CreateDirectory(Path.GetDirectoryName(_filePath));
+                File.WriteAllText(_filePath, "{}");
             }
         }
 
-        // Method to insert a key-value pair
         public void Insertar(string key, string value)
         {
-            using (StreamWriter writer = new StreamWriter(filePath, true))
-            {
-                writer.WriteLine($"{key}|{value}");
-            }
+            var datos = ObtenerDatos();
+            datos[key] = value;
+            GuardarDatos(datos);
         }
 
-        // Method to modify the value of an existing key
         public void Modificar(string key, string newValue)
         {
-            List<string> lines = File.ReadAllLines(filePath).ToList();
-            bool modified = false;
-
-            // Modify the line with the matching key
-            for (int i = 0; i < lines.Count; i++)
-            {
-                string[] keyValue = lines[i].Split('|');
-                if (keyValue[0] == key)
-                {
-                    lines[i] = $"{key}|{newValue}";
-                    modified = true;
-                    break;
-                }
-            }
-
-            if (modified)
-            {
-                File.WriteAllLines(filePath, lines);
-            }
+            var datos = ObtenerDatos();
+            datos[key] = newValue;
+            GuardarDatos(datos);
         }
 
-        // Method to delete a key-value pair by key
-        public void Borrar(string key)
-        {
-            List<string> lines = File.ReadAllLines(filePath).ToList();
-
-            // Remove the line with the matching key
-            lines = lines.Where(line => line.Split('|')[0] != key).ToList();
-
-            File.WriteAllLines(filePath, lines);
-        }
-
-        // Method to search for a value by key
         public string Buscar(string key)
         {
-            string[] lines = File.ReadAllLines(filePath);
-
-            foreach (var line in lines)
+            var datos = ObtenerDatos();
+            if (datos.TryGetValue(key, out var valor))
             {
-                string[] keyValue = line.Split('|');
-                if (keyValue[0] == key)
-                {
-                    return keyValue[1];
-                }
+                return valor;
             }
-
-            return null; // Return null if not found
+            return null;
         }
 
-        // Method to list all key-value pairs
+        public void Borrar(string key)
+        {
+            var datos = ObtenerDatos();
+            datos.Remove(key);
+            GuardarDatos(datos);
+        }
+
         public List<string> Listar()
         {
-            return File.ReadAllLines(filePath).ToList();
+            var datos = ObtenerDatos();
+            return new List<string>(datos.Keys);
+        }
+
+        private Dictionary<string, string> ObtenerDatos()
+        {
+            var json = File.ReadAllText(_filePath);
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+        }
+
+        private void GuardarDatos(Dictionary<string, string> datos)
+        {
+            var json = JsonConvert.SerializeObject(datos, Formatting.Indented);
+            File.WriteAllText(_filePath, json);
         }
     }
 }

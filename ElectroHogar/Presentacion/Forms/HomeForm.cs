@@ -12,6 +12,7 @@ namespace ElectroHogar.Presentacion.Forms
         private readonly string _nombreUsuario;
         private const int MARGEN = 50;
         private const int ESPACIO_ENTRE_BOTONES = 20;
+        private const int ANCHO_FORM = 600;
 
         public HomeForm(TipoPerfil perfil, string nombreUsuario)
         {
@@ -23,10 +24,9 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void ConfigurarFormulario()
         {
-            // Configuración básica del form
             FormHelper.ConfigurarFormularioBase(this);
             this.Text = $"ElectroHogar - {_perfil}";
-            this.Size = new Size(600, 500);
+            this.ClientSize = new Size(ANCHO_FORM, 0);  // Alto inicial 0, se ajustará automáticamente
 
             // Panel superior con título
             var panelSuperior = FormHelper.CrearPanelSuperior("ElectroHogar");
@@ -38,7 +38,7 @@ namespace ElectroHogar.Presentacion.Forms
             lblBienvenida.Font = new Font(lblBienvenida.Font, FontStyle.Bold);
             this.Controls.Add(lblBienvenida);
 
-            // Crear botones de módulos
+            // Crear botones y ajustar altura del form
             CrearBotonesModulos(lblBienvenida.Bottom + 20);
         }
 
@@ -47,22 +47,28 @@ namespace ElectroHogar.Presentacion.Forms
             var modulos = Perfiles.ObtenerModulos(_perfil);
             var currentY = startY;
 
+            // Crear botones de módulos
             foreach (var modulo in modulos)
             {
-                var btn = FormHelper.CrearBotonPrimario(modulo.Nombre, 500);
+                var btn = FormHelper.CrearBotonPrimario(modulo.Nombre, ANCHO_FORM - (MARGEN * 2));
                 btn.Location = new Point(MARGEN, currentY);
                 btn.Click += (s, e) => AbrirModulo(modulo.FormularioDestino);
                 this.Controls.Add(btn);
-
                 currentY += btn.Height + ESPACIO_ENTRE_BOTONES;
             }
 
-            // Botón de cerrar sesión al final
-            var btnCerrarSesion = FormHelper.CrearBotonPrimario("Cerrar Sesión", 500);
+            // Botón de cerrar sesión
+            var btnCerrarSesion = FormHelper.CrearBotonPrimario("Cerrar Sesión", ANCHO_FORM - (MARGEN * 2));
             btnCerrarSesion.Location = new Point(MARGEN, currentY + ESPACIO_ENTRE_BOTONES);
-            btnCerrarSesion.BackColor = Color.FromArgb(192, 0, 0); // Rojo
+            btnCerrarSesion.BackColor = Color.FromArgb(192, 0, 0);
             btnCerrarSesion.Click += (s, e) => CerrarSesion();
             this.Controls.Add(btnCerrarSesion);
+
+            // Ajustar altura del formulario automáticamente
+            this.ClientSize = new Size(
+                ANCHO_FORM,
+                btnCerrarSesion.Bottom + MARGEN  // Alto dinámico basado en el último botón
+            );
         }
 
         private void AbrirModulo(string nombreFormulario)
@@ -92,18 +98,12 @@ namespace ElectroHogar.Presentacion.Forms
             if (MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Confirmar",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                var loginForm = new LoginForm();
+                this.Hide();
+                loginForm.ShowDialog();
                 this.Close();
-                Application.Restart();
             }
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            base.OnFormClosing(e);
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                Application.Exit();
-            }
-        }
     }
 }

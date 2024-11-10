@@ -40,6 +40,6 @@ namespace ElectroHogar.Negocio.Utils
             new LoginResult(mensaje, false, tipoError: tipo);
 
         public static LoginResult ErrorUsuarioBloqueado() =>
-            Error("Usuario bloqueado por exceso de intentos. Contacte al administrador.", LoginErrorTipo.UsuarioBloqueado);
+            Error("Usuario bloqueado por exceso de intentos.", LoginErrorTipo.UsuarioBloqueado);
     }
 }

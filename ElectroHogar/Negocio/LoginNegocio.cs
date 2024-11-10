@@ -39,6 +39,7 @@ namespace ElectroHogar.Negocio
             if (intentos >= _maxIntentos)
             {
                 return LoginResult.ErrorUsuarioBloqueado();
+                // TODO: llamar al WS y poner usuario inactivo!
             }
 
             try
