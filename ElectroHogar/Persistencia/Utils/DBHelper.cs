@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persistencia.Utils
+namespace ElectroHogar.Persistencia.Utils
 {
     public class DBHelper
     {

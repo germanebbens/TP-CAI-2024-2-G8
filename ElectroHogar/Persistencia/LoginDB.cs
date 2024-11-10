@@ -1,8 +1,8 @@
-﻿using Persistencia.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using ElectroHogar.Persistencia.Utils;
 
-namespace Persistencia
+namespace ElectroHogar.Persistencia
 {
     public class LoginDB
     {

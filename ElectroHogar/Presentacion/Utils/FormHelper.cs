@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Presentacion.Utils
+namespace ElectroHogar.Presentacion.Utils
 {
     public static class FormHelper
     {

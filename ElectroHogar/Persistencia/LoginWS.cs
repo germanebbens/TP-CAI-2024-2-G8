@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Datos;
-using Persistencia.Utils;
+using ElectroHogar.Datos;
+using ElectroHogar.Persistencia.Utils;
 using ElectroHogar.Config;
 
-namespace Persistencia
+namespace ElectroHogar.Persistencia
 {
     public class LoginWS
     {

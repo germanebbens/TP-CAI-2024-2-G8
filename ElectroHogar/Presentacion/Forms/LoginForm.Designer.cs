@@ -1,4 +1,4 @@
-﻿namespace Presentacion.Forms
+﻿namespace ElectroHogar.Presentacion.Forms
 {
     partial class LoginForm
     {

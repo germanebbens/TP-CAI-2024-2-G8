@@ -1,6 +1,6 @@
 using System;
 
-namespace Negocio.Utils
+namespace ElectroHogar.Negocio.Utils
 {
     public enum TipoPerfil
     {

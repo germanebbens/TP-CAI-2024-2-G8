@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
-using Negocio;
-using Negocio.Utils;
-using Presentacion.Utils;
+using ElectroHogar.Negocio;
+using ElectroHogar.Negocio.Utils;
+using ElectroHogar.Presentacion.Utils;
 
-namespace Presentacion.Forms
+namespace ElectroHogar.Presentacion.Forms
 {
     public partial class LoginForm : Form
     {
@@ -111,24 +111,13 @@ namespace Presentacion.Forms
             FormHelper.MostrarEstado(lblEstado, $"Bienvenido! Iniciando sesión como {resultado.Perfil}...");
             System.Threading.Thread.Sleep(1000);
 
-            Form formulario;
-            switch (resultado.Perfil)
-            {
-                case TipoPerfil.Administrador:
-                    //formulario = new AdminForm();  // TODO: Crear estos formularios
-                    break;
-                case TipoPerfil.Supervisor:
-                    //formulario = new SupervisorForm();
-                    break;
-                case TipoPerfil.Vendedor:
-                    //formulario = new VendedorForm();
-                    break;
-                default:
-                    throw new Exception($"Perfil no manejado: {resultado.Perfil}");
-            }
+            var homeForm = new HomeForm(
+                resultado.Perfil.Value,
+                txtUsuario.Text
+            );
 
             this.Hide();
-            //formulario.ShowDialog();
+            homeForm.ShowDialog();
             this.Close();
         }
 

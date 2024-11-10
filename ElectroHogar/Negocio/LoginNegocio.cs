@@ -1,9 +1,9 @@
-﻿using Persistencia;
-using System;
-using Negocio.Utils;
+﻿using System;
+using ElectroHogar.Persistencia;
+using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Config;
 
-namespace Negocio
+namespace ElectroHogar.Negocio
 {
     public class LoginNegocio
     {

@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using ElectroHogar.Config;
-using Presentacion.Utils;
+using ElectroHogar.Presentacion.Utils;
 
-namespace Persistencia.Utils
+namespace ElectroHogar.Persistencia.Utils
 {
     public class WebHelper
     {
