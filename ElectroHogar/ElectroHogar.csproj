@@ -51,10 +51,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configs.cs" />
+    <Compile Include="Datos\ClienteWS.cs" />
+    <Compile Include="Datos\ProductoWS.cs" />
+    <Compile Include="Datos\ProveedorWS.cs" />
     <Compile Include="Negocio\NuevoUsuario.cs" />
     <Compile Include="Negocio\Perfiles.cs" />
-    <Compile Include="Persistencia\ClavesTemporalesDB.cs" />
-    <Compile Include="Persistencia\NuevoUsuarioWS.cs" />
+    <Compile Include="Persistencia\WebService\BaseWS.cs" />
+    <Compile Include="Persistencia\DataBase\ClavesTemporalesDB.cs" />
+    <Compile Include="Persistencia\WebService\ClientesWS.cs" />
+    <Compile Include="Persistencia\WebService\ProductosWS.cs" />
+    <Compile Include="Persistencia\WebService\ProveedoresWS.cs" />
     <Compile Include="Presentacion\Forms\HomeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,10 +77,10 @@
     <Compile Include="Presentacion\Utils\Validations.cs" />
     <Compile Include="Negocio\LoginNegocio.cs" />
     <Compile Include="Negocio\Utils\LoginUtils.cs" />
-    <Compile Include="Persistencia\LoginDB.cs" />
-    <Compile Include="Persistencia\LoginWS.cs" />
-    <Compile Include="Persistencia\Utils\DBHelper.cs" />
-    <Compile Include="Persistencia\Utils\WebHelper.cs" />
+    <Compile Include="Persistencia\DataBase\LoginDB.cs" />
+    <Compile Include="Persistencia\WebService\UsuariosWS.cs" />
+    <Compile Include="Persistencia\DataBase\Utils\DBHelper.cs" />
+    <Compile Include="Persistencia\WebService\Utils\WebHelper.cs" />
     <Compile Include="Datos\UsuarioWS.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

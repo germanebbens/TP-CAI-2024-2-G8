@@ -7,14 +7,14 @@ namespace ElectroHogar.Negocio
 {
     public class LoginNegocio
     {
-        private readonly LoginWS _loginWS;
+        private readonly UsuariosWS _loginWS;
         private readonly LoginDB _loginDB;
         private string _usuarioLogueadoId;
         private readonly int _maxIntentos;
 
         public LoginNegocio()
         {
-            _loginWS = new LoginWS();
+            _loginWS = new UsuariosWS();
             _loginDB = new LoginDB();
             _maxIntentos = ConfigHelper.GetIntValueOrDefault("MaxIntentosLogin", 3);
         }
@@ -27,14 +27,12 @@ namespace ElectroHogar.Negocio
             }
             catch (Exception ex)
             {
-                // Aquí podríamos agregar logging
                 return LoginResult.Error($"Error en el servidor: {ex.Message}", LoginErrorTipo.ErrorServidor);
             }
         }
 
         private LoginResult RealizarLogin(string usuario, string password)
         {
-            // 1. Verificar si el usuario está bloqueado
             int intentos = ObtenerIntentosFallidos(usuario);
             if (intentos >= _maxIntentos)
             {
@@ -44,13 +42,8 @@ namespace ElectroHogar.Negocio
 
             try
             {
-                // 2. Intentar autenticación
-                _usuarioLogueadoId = _loginWS.login(usuario, password);
-
-                // 3. Login exitoso - reiniciar intentos
+                _usuarioLogueadoId = _loginWS.Login(usuario, password);
                 ReiniciarIntentos(usuario);
-
-                // 4. Obtener y retornar perfil
                 return ObtenerPerfilUsuario();
             }
             catch (Exception ex) when (ex.Message.Contains("incorrecto"))
@@ -105,7 +98,7 @@ namespace ElectroHogar.Negocio
 
         private LoginResult ObtenerPerfilUsuario()
         {
-            var usuarios = _loginWS.buscarDatosUsuario();
+            var usuarios = _loginWS.BuscarUsuariosActivos();
             var usuarioActivo = usuarios.Find(u => u.Id.ToString() == _usuarioLogueadoId);
 
             if (usuarioActivo == null)

@@ -9,23 +9,23 @@ namespace ElectroHogar.Negocio
 {
     internal class NuevoUsuario
     {
-        private readonly NuevoUsuarioWS _nuevoUsuarioService;
+        private readonly UsuariosWS _nuevoUsuarioService;
         private readonly ClavesTemporalesDB _clavesTemporalesDB;
         private readonly LoginDB _loginDB;
 
         public NuevoUsuario()
         {
-            _nuevoUsuarioService = new NuevoUsuarioWS();
+            _nuevoUsuarioService = new UsuariosWS();
             _clavesTemporalesDB = new ClavesTemporalesDB();
             _loginDB = new LoginDB();
         }
 
-        public void RegistrarNuevoUsuario(NuevoUsuarioDef usuario)
+        public void RegistrarNuevoUsuario(AddUsuario usuario)
         {
             ValidarUsuario(usuario);
 
             var claveTemporal = GenerarContraseniaTemporal();
-            usuario.Contrasena = claveTemporal;
+            usuario.Contraseña = claveTemporal;
 
             _nuevoUsuarioService.AgregarUsuario(usuario);
 
@@ -36,7 +36,7 @@ namespace ElectroHogar.Negocio
             InactivarUsuario(usuario.NombreUsuario);
         }
 
-        private void ValidarUsuario(NuevoUsuarioDef usuario)
+        private void ValidarUsuario(AddUsuario usuario)
         {
             // Validar que el nombre de usuario cumpla con las reglas
             if (string.IsNullOrWhiteSpace(usuario.Nombre))
@@ -57,13 +57,13 @@ namespace ElectroHogar.Negocio
             if (usuario.NombreUsuario.Contains(usuario.Nombre) || usuario.NombreUsuario.Contains(usuario.Apellido))
                 throw new Exception("El nombre de usuario no puede contener el nombre o apellido del usuario");
 
-            if (string.IsNullOrWhiteSpace(usuario.Contrasena))
+            if (string.IsNullOrWhiteSpace(usuario.Contraseña))
                 throw new Exception("La contraseña es requerida");
 
-            if (usuario.Contrasena.Length < 8 || usuario.Contrasena.Length > 15)
+            if (usuario.Contraseña.Length < 8 || usuario.Contraseña.Length > 15)
                 throw new Exception("La contraseña debe tener entre 8 y 15 caracteres");
 
-            if (!Regex.IsMatch(usuario.Contrasena, @"^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,15}$"))
+            if (!Regex.IsMatch(usuario.Contraseña, @"^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,15}$"))
                 throw new Exception("La contraseña debe contener al menos una letra mayúscula y un número");
         }
 
