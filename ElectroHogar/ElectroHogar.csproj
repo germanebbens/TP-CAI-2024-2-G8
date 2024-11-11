@@ -86,6 +86,7 @@
     <Compile Include="Presentacion\Forms\UserManagerForm.Designer.cs">
       <DependentUpon>UserManagerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Utils\AplicationManager.cs" />
     <Compile Include="Presentacion\Utils\FormHelper.cs" />
     <Compile Include="Presentacion\Utils\Validations.cs" />
     <Compile Include="Negocio\LoginNegocio.cs" />

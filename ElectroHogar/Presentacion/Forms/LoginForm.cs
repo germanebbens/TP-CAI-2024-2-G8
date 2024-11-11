@@ -26,24 +26,20 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void ConfigurarFormulario()
         {
-            // Configuración básica del form
             FormHelper.ConfigurarFormularioBase(this);
             this.Text = "ElectroHogar - Login";
 
-            // Configuración de controles
             FormHelper.ConfigurarTextBoxPassword(txtPassword);
             txtUsuario.MaxLength = Validations.MAX_LENGTH_USERNAME;
 
-            // Eventos de navegación
             FormHelper.ConfigurarEnterTab(txtUsuario, txtPassword);
             FormHelper.ConfigurarEnterTab(txtPassword, button1);
 
-            // Efectos visuales
             FormHelper.AgregarEfectoFoco(txtUsuario);
             FormHelper.AgregarEfectoFoco(txtPassword);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void IniciarSesionBtn(object sender, EventArgs e)
         {
             lblEstado.Visible = false;
 

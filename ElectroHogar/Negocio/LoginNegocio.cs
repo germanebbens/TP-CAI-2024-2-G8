@@ -11,7 +11,7 @@ namespace ElectroHogar.Negocio
         //this class is a singleton pattern! it will be instantiated only once during the session
         private static LoginNegocio _instance;
         private static readonly object _lock = new object();
-
+        private readonly ClavesTemporalesDB _clavesTemporalesDB;
         private readonly UsuariosWS _usuarioWS;
         private readonly LoginDB _loginDB;
         private string _usuarioLogueadoId;
@@ -21,6 +21,7 @@ namespace ElectroHogar.Negocio
         {
             _usuarioWS = new UsuariosWS();
             _loginDB = new LoginDB();
+            _clavesTemporalesDB = new ClavesTemporalesDB();
             _maxIntentos = ConfigHelper.GetIntValueOrDefault("MaxIntentosLogin", 3);
         }
 
@@ -68,11 +69,35 @@ namespace ElectroHogar.Negocio
             if (intentos >= _maxIntentos)
             {
                 return LoginResult.ErrorUsuarioBloqueado();
-                // TODO: llamar al WS y poner usuario inactivo!
             }
 
             try
             {
+                var (claveTemporal, userId) = _clavesTemporalesDB.ObtenerClaveTemporal(usuario);
+
+                if (!string.IsNullOrEmpty(claveTemporal) && claveTemporal == password)
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            _usuarioWS.ReactivarUsuario(Guid.Parse(userId)); 
+
+                            _clavesTemporalesDB.EliminarClaveTemporal(usuario);
+
+                            _usuarioLogueadoId = userId;
+                            ReiniciarIntentos(usuario);
+
+                            return ObtenerPerfilUsuario();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return LoginResult.Error($"Error al activar el usuario: {ex.Message}", LoginErrorTipo.ErrorServidor);
+                    }
+                }
+
+                // no hay clave temporal o no coincide, intentar login normal
                 _usuarioLogueadoId = _usuarioWS.Login(usuario, password);
                 ReiniciarIntentos(usuario);
                 return ObtenerPerfilUsuario();

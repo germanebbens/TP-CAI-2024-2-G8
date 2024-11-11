@@ -47,7 +47,13 @@ namespace ElectroHogar.Negocio
                 // Register user, save OTP and deactivate user
                 _usuarioWS.AgregarUsuario(nuevoUsuario);
                 var usuarioActivo = BuscarUsuarioPorUsername(nuevoUsuario.NombreUsuario);
-                _clavesTemporalesDB.GuardarClaveTemporal(nuevoUsuario.NombreUsuario, nuevoUsuario.Contraseña);
+
+                _clavesTemporalesDB.GuardarClaveTemporal(
+                    nuevoUsuario.NombreUsuario,
+                    nuevoUsuario.Contraseña,
+                    usuarioActivo.Id.ToString()
+                );
+
                 DarBajaUsuario(usuarioActivo.Id);
                 return nuevoUsuario;
             }

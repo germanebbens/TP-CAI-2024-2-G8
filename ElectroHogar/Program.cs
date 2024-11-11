@@ -9,13 +9,18 @@ namespace ElectroHogar
 {
     internal static class Program
     {
-        /// Punto de entrada principal para la aplicación.
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginForm());
+
+            // Iniciamos con el LoginForm
+            var loginForm = new LoginForm();
+            ApplicationManager.Instance.ShowNewForm(loginForm);
+
+            // Mantenemos la aplicación corriendo
+            Application.Run();
         }
     }
 }

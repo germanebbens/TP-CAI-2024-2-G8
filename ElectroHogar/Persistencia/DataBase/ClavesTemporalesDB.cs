@@ -1,31 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using ElectroHogar.Persistencia.Utils;
+﻿using ElectroHogar.Persistencia.Utils;
+using Newtonsoft.Json;
 
-namespace ElectroHogar.Persistencia
+public class ClavesTemporalesDB
 {
-    public class ClavesTemporalesDB
+    private readonly DBHelper _dbHelper;
+
+    public ClavesTemporalesDB()
     {
-        private readonly DBHelper _dbHelper;
+        _dbHelper = new DBHelper("claves_temporales");
+    }
 
-        public ClavesTemporalesDB()
+    public void GuardarClaveTemporal(string nombreUsuario, string claveTemporal, string userId)
+    {
+        var datosClave = new
         {
-            _dbHelper = new DBHelper("claves_temporales");
-        }
+            Clave = claveTemporal,
+            UserId = userId
+        }; 
 
-        public void GuardarClaveTemporal(string nombreUsuario, string claveTemporal)
-        {
-            _dbHelper.Insertar(nombreUsuario, claveTemporal);
-        }
+        string datosJson = JsonConvert.SerializeObject(datosClave);
+        _dbHelper.Insertar(nombreUsuario, datosJson);
+    }
 
-        public string ObtenerClaveTemporal(string nombreUsuario)
-        {
-            return _dbHelper.Buscar(nombreUsuario);
-        }
+    public (string Clave, string UserId) ObtenerClaveTemporal(string nombreUsuario)
+    {
+        string datosJson = _dbHelper.Buscar(nombreUsuario);
 
-        public void EliminarClaveTemporal(string nombreUsuario)
+        if (string.IsNullOrEmpty(datosJson))
+            return (null, null);
+
+        try
         {
-            _dbHelper.Borrar(nombreUsuario);
+            var datos = JsonConvert.DeserializeObject<dynamic>(datosJson);
+            return (datos.Clave.ToString(), datos.UserId.ToString());
         }
+        catch
+        {
+            return (null, null);
+        }
+    }
+
+    public void EliminarClaveTemporal(string nombreUsuario)
+    {
+        _dbHelper.Borrar(nombreUsuario);
     }
 }

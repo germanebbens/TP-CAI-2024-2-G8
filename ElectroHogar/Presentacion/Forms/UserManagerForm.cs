@@ -252,10 +252,10 @@ namespace ElectroHogar.Presentacion.Forms
                     Host = (int)cmbPerfil.SelectedValue // Asumiendo que el ComboBox tiene configurado el ValueMember
                 };
 
-                _usuarioService.RegistrarNuevoUsuario(nuevoUsuario);
-                FormHelper.MostrarEstado(lblEstado, "Usuario creado exitosamente. La contraseña temporal ha sido guardada.", false);
+                AddUser newUser = _usuarioService.RegistrarNuevoUsuario(nuevoUsuario);
                 ToggleAcordeon();
                 LimpiarFormulario();
+                FormHelper.MostrarEstado(lblEstado, $"Usuario creado exitosamente. La contraseña temporal ({newUser.Contraseña}) ha sido guardada.", false);
             }
             catch (Exception ex)
             {
@@ -286,10 +286,7 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void BtnVolver_Click(object sender, EventArgs e)
         {
-            // Cierra el UserManagerForm y muestra el HomeForm
             this.Close();
-            var homeForm = new HomeForm(PerfilUsuario.Administrador, "admin");
-            homeForm.Show();
         }
     }
 }

@@ -101,10 +101,9 @@ namespace ElectroHogar.Presentacion.Forms
             if (MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Confirmar",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                LoginNegocio.Reset(); //reset singleton class login negocio
                 var loginForm = new LoginForm();
-                this.Hide();
-                loginForm.ShowDialog();
+                LoginNegocio.Reset(); //reset singleton class login negocio
+                ApplicationManager.Instance.ShowNewForm(loginForm);
                 this.Close();
             }
         }
