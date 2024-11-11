@@ -14,7 +14,7 @@ namespace ElectroHogar.Presentacion.Forms
         public LoginForm()
         {
             InitializeComponent();
-            _loginNegocio = new LoginNegocio();
+            _loginNegocio = LoginNegocio.Instance;
 
             // Inicializar label de estado
             lblEstado = FormHelper.CrearLabelEstado();

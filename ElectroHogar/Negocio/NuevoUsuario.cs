@@ -1,80 +1,135 @@
 ﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Persistencia;
+using ElectroHogar.Presentacion.Utils;
 
 namespace ElectroHogar.Negocio
 {
     internal class NuevoUsuario
     {
-        private readonly UsuariosWS _nuevoUsuarioService;
+        private readonly UsuariosWS _usuarioWS;
         private readonly ClavesTemporalesDB _clavesTemporalesDB;
         private readonly LoginDB _loginDB;
+        private readonly UserUtils _utils;
 
         public NuevoUsuario()
         {
-            _nuevoUsuarioService = new UsuariosWS();
+            _usuarioWS = new UsuariosWS();
             _clavesTemporalesDB = new ClavesTemporalesDB();
             _loginDB = new LoginDB();
+            _utils = new UserUtils();
         }
 
-        public void RegistrarNuevoUsuario(AddUsuario usuario)
+        public AddUser RegistrarNuevoUsuario(AddUser datosUsuario)
         {
-            ValidarUsuario(usuario);
+            ValidarDatosBasicos(datosUsuario);
+            ValidarNombreUsuario(datosUsuario);
+            ValidarPerfil(datosUsuario.Host);
 
-            var claveTemporal = GenerarContraseniaTemporal();
-            usuario.Contraseña = claveTemporal;
+            var nuevoUsuario = new AddUser
+            {
+                IdUsuario = Guid.Parse(_usuarioWS.adminId),
+                Host = datosUsuario.Host,
+                Nombre = datosUsuario.Nombre,
+                Apellido = datosUsuario.Apellido,
+                Dni = datosUsuario.Dni,
+                Direccion = datosUsuario.Direccion,
+                Telefono = datosUsuario.Telefono?.Trim(),
+                Email = datosUsuario.Email?.Trim(),
+                FechaNacimiento = datosUsuario.FechaNacimiento,
+                NombreUsuario = datosUsuario.NombreUsuario,
+                Contraseña = _utils.GenerarContraseniaTemporal()
+            };
 
-            _nuevoUsuarioService.AgregarUsuario(usuario);
-
-            // Guardar la clave temporal en la base de datos local
-            _clavesTemporalesDB.GuardarClaveTemporal(usuario.NombreUsuario, claveTemporal);
-
-            // Cambiar estado a "INACTIVO" hasta el primer login
-            InactivarUsuario(usuario.NombreUsuario);
+            try
+            {
+                // Register user, save OTP and deactivate user
+                _usuarioWS.AgregarUsuario(nuevoUsuario);
+                var usuarioActivo = BuscarUsuarioPorUsername(nuevoUsuario.NombreUsuario);
+                _clavesTemporalesDB.GuardarClaveTemporal(nuevoUsuario.NombreUsuario, nuevoUsuario.Contraseña);
+                DarBajaUsuario(usuarioActivo.Id);
+                return nuevoUsuario;
+            }
+            catch (Exception ex)
+            {
+                // TODO: loggear error
+                throw new Exception($"Error al crear el usuario: {ex.Message}");
+            }
+        }
+        public User BuscarUsuarioPorUsername(string username)
+        {
+            return _usuarioWS.BucarUsuarioPorUsername(username);
         }
 
-        private void ValidarUsuario(AddUsuario usuario)
+        public void DarBajaUsuario(Guid userId)
         {
-            // Validar que el nombre de usuario cumpla con las reglas
+            try
+            {
+                _usuarioWS.BajaUsuario(userId);
+            }
+            catch (Exception ex)
+            {
+                // TODO: loggear error
+                throw new Exception($"Error al dar de baja al usuario: {ex.Message}");
+            }
+        }
+
+        private void ValidarDatosBasicos(AddUser usuario)
+        {
+            // Required fields
             if (string.IsNullOrWhiteSpace(usuario.Nombre))
                 throw new Exception("El nombre del usuario es requerido");
-
             if (string.IsNullOrWhiteSpace(usuario.Apellido))
                 throw new Exception("El apellido del usuario es requerido");
+            if (string.IsNullOrWhiteSpace(usuario.Direccion))
+                throw new Exception("La dirección del usuario es requerida");
+            if (string.IsNullOrWhiteSpace(usuario.Telefono))
+                throw new Exception("El teléfono del usuario es requerido");
+            if (string.IsNullOrWhiteSpace(usuario.Email))
+                throw new Exception("El email del usuario es requerido");
 
+            // DNI
             if (usuario.Dni <= 0)
                 throw new Exception("El DNI del usuario no es válido");
+            if (usuario.Dni.ToString().Length != 8)
+                throw new Exception("El DNI debe tener 8 dígitos");
 
+            // Format Validations
+            if (!Validations.ValidarEmail(usuario.Email).isValid)
+                throw new Exception("El formato del email no es válido");
+            if (!Validations.ValidarTelefono(usuario.Telefono).isValid)
+                throw new Exception("El formato del teléfono no es válido");
+            var (fechaValida, mensaje) = Validations.ValidarFecha(usuario.FechaNacimiento);
+            if (!fechaValida)
+                throw new Exception(mensaje);
+
+            // age validation
+            var edad = DateTime.Today.Year - usuario.FechaNacimiento.Year;
+            if (edad > 150)
+                throw new Exception("El usuario debe tener menos de 150 años.");
+        }
+
+        private void ValidarNombreUsuario(AddUser usuario)
+        {
             if (string.IsNullOrWhiteSpace(usuario.NombreUsuario))
                 throw new Exception("El nombre de usuario es requerido");
 
-            if (usuario.NombreUsuario.Length < 8 || usuario.NombreUsuario.Length > 15)
-                throw new Exception("El nombre de usuario debe tener entre 8 y 15 caracteres");
+            if (usuario.NombreUsuario.Length < Validations.MIN_LENGTH_USERNAME ||
+                usuario.NombreUsuario.Length > Validations.MAX_LENGTH_USERNAME)
+                throw new Exception($"El nombre de usuario debe tener entre {Validations.MIN_LENGTH_USERNAME} y {Validations.MAX_LENGTH_USERNAME} caracteres");
 
-            if (usuario.NombreUsuario.Contains(usuario.Nombre) || usuario.NombreUsuario.Contains(usuario.Apellido))
+            // Validate that doesn't contain first or last name (case insensitive)
+            if (usuario.NombreUsuario.ToLower().Contains(usuario.Nombre.ToLower()) ||
+                usuario.NombreUsuario.ToLower().Contains(usuario.Apellido.ToLower()))
                 throw new Exception("El nombre de usuario no puede contener el nombre o apellido del usuario");
-
-            if (string.IsNullOrWhiteSpace(usuario.Contraseña))
-                throw new Exception("La contraseña es requerida");
-
-            if (usuario.Contraseña.Length < 8 || usuario.Contraseña.Length > 15)
-                throw new Exception("La contraseña debe tener entre 8 y 15 caracteres");
-
-            if (!Regex.IsMatch(usuario.Contraseña, @"^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,15}$"))
-                throw new Exception("La contraseña debe contener al menos una letra mayúscula y un número");
         }
 
-        private string GenerarContraseniaTemporal()
+        private void ValidarPerfil(int perfil)
         {
-            return "CAI20232";
-        }
-
-        private void InactivarUsuario(string nombreUsuario)
-        {
-            // Cambiar el estado del usuario en la base de datos local
+            // Only allow to create salespeople and supervisors
+            if (perfil != (int)PerfilUsuario.Vendedor && perfil != (int)PerfilUsuario.Supervisor)
+                throw new Exception("Solo se pueden crear usuarios con perfil Vendedor o Supervisor");
         }
     }
 }

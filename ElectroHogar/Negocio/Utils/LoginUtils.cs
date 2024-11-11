@@ -1,14 +1,8 @@
 using System;
+using ElectroHogar.Datos;
 
 namespace ElectroHogar.Negocio.Utils
 {
-    public enum TipoPerfil
-    {
-        Vendedor = 1,
-        Supervisor = 2,
-        Administrador = 3
-    }
-
     public enum LoginErrorTipo
     {
         CredencialesInvalidas,
@@ -22,19 +16,21 @@ namespace ElectroHogar.Negocio.Utils
     {
         public string Mensaje { get; }
         public bool Exito { get; }
+        public User Usuario { get; }
         public LoginErrorTipo? TipoError { get; }
-        public TipoPerfil? Perfil { get; }
+        public PerfilUsuario? Perfil { get; }
 
-        private LoginResult(string mensaje, bool exito, TipoPerfil? perfil = null, LoginErrorTipo? tipoError = null)
+        private LoginResult(string mensaje, bool exito, User usuarioActivo = null, PerfilUsuario? perfil = null, LoginErrorTipo? tipoError = null)
         {
             Mensaje = mensaje;
             Exito = exito;
             Perfil = perfil;
             TipoError = tipoError;
+            Usuario = usuarioActivo;
         }
 
-        public static LoginResult Exitoso(TipoPerfil perfil) =>
-            new LoginResult(perfil.ToString(), true, perfil);
+        public static LoginResult Exitoso(PerfilUsuario perfil, User usuarioActivo) =>
+            new LoginResult(perfil.ToString(), true, usuarioActivo, perfil);
 
         public static LoginResult Error(string mensaje, LoginErrorTipo tipo) =>
             new LoginResult(mensaje, false, tipoError: tipo);

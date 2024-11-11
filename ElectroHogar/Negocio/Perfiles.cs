@@ -1,4 +1,4 @@
-﻿using ElectroHogar.Negocio.Utils;
+﻿using ElectroHogar.Datos;
 
 namespace ElectroHogar.Negocio
 {
@@ -16,15 +16,14 @@ namespace ElectroHogar.Negocio
             }
         }
 
-        public static ModuloMenu[] ObtenerModulos(TipoPerfil perfil)
+        public static ModuloMenu[] ObtenerModulos(PerfilUsuario perfil)
         {
             switch (perfil)
             {
-                case TipoPerfil.Administrador:
+                case PerfilUsuario.Administrador:
                     return new[]
                     {
-                        new ModuloMenu("Gestión de Supervisores", "SupervisoresForm"),
-                        new ModuloMenu("Gestión de Vendedores", "VendedoresForm"),
+                        new ModuloMenu("Gestión de Usuarios", "UsuariosForm"),
                         new ModuloMenu("Gestión de Proveedores", "ProveedoresForm"),
                         new ModuloMenu("Gestión de Productos", "ProductosForm"),
                         new ModuloMenu("Reportes de Stock", "StockReportForm"),
@@ -32,7 +31,7 @@ namespace ElectroHogar.Negocio
                         new ModuloMenu("Reportes de Productos", "ProductosReportForm")
                     };
 
-                case TipoPerfil.Supervisor:
+                case PerfilUsuario.Supervisor:
                     return new[]
                     {
                         new ModuloMenu("Gestión de Productos", "ProductosForm"),
@@ -42,7 +41,7 @@ namespace ElectroHogar.Negocio
                         new ModuloMenu("Reportes de Productos", "ProductosReportForm")
                     };
 
-                case TipoPerfil.Vendedor:
+                case PerfilUsuario.Vendedor:
                     return new[]
                     {
                         new ModuloMenu("Ventas", "VentasForm"),

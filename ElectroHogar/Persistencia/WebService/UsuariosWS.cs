@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using ElectroHogar.Datos;
+﻿using ElectroHogar.Datos;
 using ElectroHogar.Persistencia.Utils;
-using ElectroHogar.Config;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ElectroHogar.Persistencia
 {
     public class UsuariosWS : BaseWS
     {
-
-        public UsuariosWS(string usuarioLogueadoId = null) : base()
+        public readonly string adminId;
+        public UsuariosWS() : base()
         {
+            adminId = _adminId;
         }
 
         public string Login(string username, string password)
@@ -26,19 +27,36 @@ namespace ElectroHogar.Persistencia
             return DeserializarRespuesta<string>(response);
         }
 
-        public List<UsuarioList> BuscarUsuariosActivos()
+        public List<User> BuscarUsuariosActivos()
         {
             var response = WebHelper.Get($"Usuario/TraerUsuariosActivos?id={_adminId}");
-            return DeserializarRespuesta<List<UsuarioList>>(response);
+            return DeserializarRespuesta<List<User>>(response);
         }
 
-        public void AgregarUsuario(AddUsuario usuario)
+        public User BucarUsuarioPorId(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+            return BuscarUsuariosActivos()
+                .FirstOrDefault(u => u.Id.ToString().Equals(id));
+        }
+
+        public User BucarUsuarioPorUsername(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentNullException(nameof(username));
+
+            return BuscarUsuariosActivos()
+                .FirstOrDefault(u => u.NombreUsuario.Equals(username));
+        }
+
+        public void AgregarUsuario(AddUser usuario)
         {
             var response = WebHelper.Post("Usuario/AgregarUsuario", JsonConvert.SerializeObject(usuario));
             DeserializarRespuesta<object>(response);
         }
 
-        public void CambiarContraseña(PatchUsuario cambioPassword)
+        public void CambiarContraseña(PatchUser cambioPassword)
         {
             var response = WebHelper.Patch("Usuario/CambiarContraseña", JsonConvert.SerializeObject(cambioPassword));
             DeserializarRespuesta<object>(response);
@@ -46,14 +64,14 @@ namespace ElectroHogar.Persistencia
 
         public void BajaUsuario(Guid idUsuario)
         {
-            var permisos = new { id = idUsuario, idUsuario = _adminId };
+            var permisos = new { id = idUsuario.ToString(), idUsuario = _adminId };
             var response = WebHelper.DeleteWithBody("Usuario/BajaUsuario", JsonConvert.SerializeObject(permisos));
             DeserializarRespuesta<object>(response);
         }
 
         public void ReactivarUsuario(Guid idUsuario)
         {
-            var permisos = new { id = idUsuario, idUsuario = _adminId };
+            var permisos = new { id = idUsuario.ToString(), idUsuario = _adminId };
             var response = WebHelper.Patch("Usuario/ReactivarUsuario", JsonConvert.SerializeObject(permisos));
             DeserializarRespuesta<object>(response);
         }

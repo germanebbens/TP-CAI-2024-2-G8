@@ -2,21 +2,52 @@
 using ElectroHogar.Persistencia;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Config;
+using ElectroHogar.Datos;
 
 namespace ElectroHogar.Negocio
 {
     public class LoginNegocio
     {
-        private readonly UsuariosWS _loginWS;
+        //this class is a singleton pattern! it will be instantiated only once during the session
+        private static LoginNegocio _instance;
+        private static readonly object _lock = new object();
+
+        private readonly UsuariosWS _usuarioWS;
         private readonly LoginDB _loginDB;
         private string _usuarioLogueadoId;
         private readonly int _maxIntentos;
 
-        public LoginNegocio()
+        private LoginNegocio()  // private constructor!
         {
-            _loginWS = new UsuariosWS();
+            _usuarioWS = new UsuariosWS();
             _loginDB = new LoginDB();
             _maxIntentos = ConfigHelper.GetIntValueOrDefault("MaxIntentosLogin", 3);
+        }
+
+        public static LoginNegocio Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new LoginNegocio();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
+
+        public static void Reset() // when the session is closed - logout
+        {
+            lock (_lock)
+            {
+                _instance = null;
+            }
         }
 
         public LoginResult Login(string usuario, string password)
@@ -42,7 +73,7 @@ namespace ElectroHogar.Negocio
 
             try
             {
-                _usuarioLogueadoId = _loginWS.Login(usuario, password);
+                _usuarioLogueadoId = _usuarioWS.Login(usuario, password);
                 ReiniciarIntentos(usuario);
                 return ObtenerPerfilUsuario();
             }
@@ -57,7 +88,7 @@ namespace ElectroHogar.Negocio
         {
             try
             {
-                return _loginDB.obtenerIntentos(usuario);
+                return _loginDB.ObtenerIntentos(usuario);
             }
             catch (Exception)
             {
@@ -72,9 +103,9 @@ namespace ElectroHogar.Negocio
                 var nuevoValor = (intentosActuales + 1).ToString();
 
                 if (intentosActuales == 0)
-                    _loginDB.guardarIntento(usuario);
+                    _loginDB.GuardarIntento(usuario);
                 else
-                    _loginDB.actualizarIntento(usuario, nuevoValor);
+                    _loginDB.ActualizarIntento(usuario, nuevoValor);
             }
             catch (Exception ex)
             {
@@ -87,7 +118,7 @@ namespace ElectroHogar.Negocio
         {
             try
             {
-                _loginDB.actualizarIntento(usuario, "0");
+                _loginDB.ActualizarIntento(usuario, "0");
             }
             catch (Exception ex)
             {
@@ -98,8 +129,7 @@ namespace ElectroHogar.Negocio
 
         private LoginResult ObtenerPerfilUsuario()
         {
-            var usuarios = _loginWS.BuscarUsuariosActivos();
-            var usuarioActivo = usuarios.Find(u => u.Id.ToString() == _usuarioLogueadoId);
+            User usuarioActivo = _usuarioWS.BucarUsuarioPorId(_usuarioLogueadoId);
 
             if (usuarioActivo == null)
             {
@@ -109,11 +139,11 @@ namespace ElectroHogar.Negocio
                 );
             }
 
-            // Verifica si el perfil es un valor válido de TipoPerfil
-            if (Enum.IsDefined(typeof(TipoPerfil), usuarioActivo.Host))
+            // Checks if the profile (or 'host') is a valid value of PerfilUsuario
+            if (Enum.IsDefined(typeof(PerfilUsuario), usuarioActivo.Host))
             {
-                var perfil = (TipoPerfil)usuarioActivo.Host;
-                return LoginResult.Exitoso(perfil);
+                var perfil = (PerfilUsuario)usuarioActivo.Host;
+                return LoginResult.Exitoso(perfil, usuarioActivo);
             }
             else
             {

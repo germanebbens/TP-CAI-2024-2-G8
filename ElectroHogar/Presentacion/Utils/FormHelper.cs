@@ -1,4 +1,7 @@
-﻿using System.Drawing;
+﻿using ElectroHogar.Config;
+using ElectroHogar.Datos;
+using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ElectroHogar.Presentacion.Utils
@@ -10,6 +13,9 @@ namespace ElectroHogar.Presentacion.Utils
         public static Color ColorFondoTextBox = Color.FromArgb(240, 248, 255);
         public static Font FuenteNormal = new Font("Segoe UI", 9.75F);
         public static Font FuenteTitulo = new Font("Segoe UI", 18F, FontStyle.Bold);
+        public static int ANCHO_FORM = ConfigHelper.GetIntValueOrDefault("AnchoFormulario", 600);
+        public static int MARGEN = ConfigHelper.GetIntValueOrDefault("MargenFormulario", 20);
+
 
         public static void ConfigurarFormularioBase(Form form)
         {
@@ -120,6 +126,130 @@ namespace ElectroHogar.Presentacion.Utils
                     destino.Focus();
                 }
             };
+        }
+
+        public static TextBox CrearCampoTexto(string etiqueta, string nombre, ref int currentY, Panel container)
+        {
+            var lbl = new Label
+            {
+                Text = etiqueta,
+                Location = new Point(FormHelper.MARGEN, currentY),
+                AutoSize = true
+            };
+
+            var txt = new TextBox
+            {
+                Name = nombre, // Asignar el nombre al control
+                Location = new Point(FormHelper.MARGEN, lbl.Bottom + 5),
+                Width = container.Width - (FormHelper.MARGEN * 2)
+            };
+
+            container.Controls.AddRange(new Control[] { lbl, txt });
+            currentY = txt.Bottom + 10;
+            return txt;
+        }
+        
+        public static DateTimePicker CrearCampoFecha(string etiqueta, string nombre, ref int currentY, Panel container)
+        {
+            var lbl = new Label
+            {
+                Text = etiqueta,
+                Location = new Point(MARGEN, currentY),
+                AutoSize = true
+            };
+
+            var dtp = new DateTimePicker
+            {
+                Name = nombre,
+                Location = new Point(MARGEN, lbl.Bottom + 5),
+                Width = container.Width - (MARGEN * 2),
+                Format = DateTimePickerFormat.Short,
+                Value = DateTime.Today
+            };
+
+            container.Controls.AddRange(new Control[] { lbl, dtp });
+            currentY = dtp.Bottom + 10;
+            return dtp;
+        }
+
+        public static ComboBox CrearComboPerfil(string etiqueta, string nombre, ref int currentY, Panel container)
+        {
+            var lbl = new Label
+            {
+                Text = etiqueta,
+                Location = new Point(MARGEN, currentY),
+                AutoSize = true
+            };
+
+            var cmb = new ComboBox
+            {
+                Name = nombre,
+                Location = new Point(MARGEN, lbl.Bottom + 5),
+                Width = container.Width - (MARGEN * 2),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            // Agregar los perfiles permitidos (solo Vendedor y Supervisor según la lógica de negocio)
+            cmb.DisplayMember = "Text";
+            cmb.ValueMember = "Value";
+
+            var items = new[] {
+            new { Text = "Vendedor", Value = (int)PerfilUsuario.Vendedor },
+            new { Text = "Supervisor", Value = (int)PerfilUsuario.Supervisor }
+        };
+
+            cmb.DataSource = items;
+
+            container.Controls.AddRange(new Control[] { lbl, cmb });
+            currentY = cmb.Bottom + 10;
+            return cmb;
+        }
+        
+        public static Panel CrearPanelBusqueda(string labelText, EventHandler onBuscar, out TextBox txtBusqueda)
+        {
+            var panel = new Panel
+            {
+                Width = ANCHO_FORM,
+                Height = 100,
+                Padding = new Padding(50)
+            };
+
+            var lblBuscar = CrearLabel(labelText);
+            lblBuscar.Location = new Point(50, 10);
+
+            txtBusqueda = CrearTextBox(200);
+            txtBusqueda.Location = new Point(50, lblBuscar.Bottom + 10);
+
+            var btnBuscar = CrearBotonPrimario("Buscar", 100);
+            btnBuscar.Location = new Point(txtBusqueda.Right + 10, lblBuscar.Bottom + 10);
+            btnBuscar.Click += onBuscar;
+
+            panel.Controls.AddRange(new Control[] { lblBuscar, txtBusqueda, btnBuscar });
+            return panel;
+        }
+
+        public static Panel CrearPanelResultadoBusqueda(EventHandler onDeshabilitar, out Label lblResultado)
+        {
+            var panel = new Panel
+            {
+                Width = ANCHO_FORM,
+                Height = 120,
+                Visible = false,
+                Padding = new Padding(50)
+            };
+
+            lblResultado = CrearLabel("");
+            lblResultado.Location = new Point(50, 20);
+            lblResultado.AutoSize = true;
+
+            var btnDeshabilitar = CrearBotonPrimario("Deshabilitar Usuario", 200);
+            btnDeshabilitar.Location = new Point(50, 60);
+            btnDeshabilitar.BackColor = Color.FromArgb(192, 0, 0);
+            btnDeshabilitar.Click += onDeshabilitar;
+            btnDeshabilitar.Visible = false;
+
+            panel.Controls.AddRange(new Control[] { lblResultado, btnDeshabilitar });
+            return panel;
         }
     }
 }

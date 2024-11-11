@@ -8,7 +8,7 @@ namespace ElectroHogar.Datos
         Supervisor = 2,
         Administrador = 3
     }
-    public class UsuarioList
+    public class User
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; }
@@ -17,7 +17,7 @@ namespace ElectroHogar.Datos
         public string NombreUsuario { get; set; }
         public int Host { get; set; }
     }
-    public class AddUsuario
+    public class AddUser
     {
         public Guid IdUsuario { get; set; }
         public int Host { get; set; }
@@ -31,13 +31,13 @@ namespace ElectroHogar.Datos
         public string NombreUsuario { get; set; }
         public string Contraseña { get; set; }
     }
-    public class PatchUsuario
+    public class PatchUser
     {
         public string NombreUsuario { get; set; }
         public string Contraseña { get; set; }
         public string ContraseñaNueva { get; set; }
     }
-    public class Permisos
+    public class Permissions
     {
         public Guid Id { get; set; }
         public Guid IdUsuario { get; set; }

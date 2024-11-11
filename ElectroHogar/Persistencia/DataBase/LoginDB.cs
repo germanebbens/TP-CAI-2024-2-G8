@@ -13,17 +13,17 @@ namespace ElectroHogar.Persistencia
             _dbHelper = new DBHelper("intentos_login");
         }
 
-        public void guardarIntento(string username)
+        public void GuardarIntento(string username)
         {
             _dbHelper.Insertar(username, "1");
         }
 
-        public void actualizarIntento(string key, string newValue)
+        public void ActualizarIntento(string key, string newValue)
         {
             _dbHelper.Modificar(key, newValue);
         }
 
-        public int obtenerIntentos(string username)
+        public int ObtenerIntentos(string username)
         {
             var valor = _dbHelper.Buscar(username);
             if (valor == null)
@@ -33,17 +33,17 @@ namespace ElectroHogar.Persistencia
             return int.Parse(valor);
         }
 
-        public string obtenerArray(string key)
+        public string ObtenerArray(string key)
         {
             return _dbHelper.Buscar(key);
         }
 
-        public void modificarDatos(string key, string newValue)
+        public void ModificarDatos(string key, string newValue)
         {
             _dbHelper.Modificar(key, newValue);
         }
 
-        public void guardarArray(List<string> datos)
+        public void GuardarArray(List<string> datos)
         {
             string correosElectronicos = string.Join(",", datos);
             _dbHelper.Insertar("correosElectronicos", correosElectronicos);

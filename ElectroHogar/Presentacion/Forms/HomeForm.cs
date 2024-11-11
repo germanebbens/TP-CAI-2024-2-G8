@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using ElectroHogar.Datos;
 using ElectroHogar.Negocio;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Presentacion.Utils;
@@ -8,15 +9,16 @@ namespace ElectroHogar.Presentacion.Forms
 {
     public partial class HomeForm : Form
     {
-        private readonly TipoPerfil _perfil;
+        private readonly PerfilUsuario _perfil;
         private readonly string _nombreUsuario;
         private const int MARGEN = 50;
         private const int ESPACIO_ENTRE_BOTONES = 20;
-        private const int ANCHO_FORM = 600;
+        private readonly int ANCHO_FORM;
 
-        public HomeForm(TipoPerfil perfil, string nombreUsuario)
+        public HomeForm(PerfilUsuario perfil, string nombreUsuario)
         {
             InitializeComponent();
+            ANCHO_FORM = FormHelper.ANCHO_FORM;
             _perfil = perfil;
             _nombreUsuario = nombreUsuario;
             ConfigurarFormulario();
@@ -26,7 +28,7 @@ namespace ElectroHogar.Presentacion.Forms
         {
             FormHelper.ConfigurarFormularioBase(this);
             this.Text = $"ElectroHogar - {_perfil}";
-            this.ClientSize = new Size(ANCHO_FORM, 0);  // Alto inicial 0, se ajustará automáticamente
+            this.ClientSize = new Size(ANCHO_FORM, 0); // initial height 0
 
             // Panel superior con título
             var panelSuperior = FormHelper.CrearPanelSuperior("ElectroHogar");
@@ -67,30 +69,31 @@ namespace ElectroHogar.Presentacion.Forms
             // Ajustar altura del formulario automáticamente
             this.ClientSize = new Size(
                 ANCHO_FORM,
-                btnCerrarSesion.Bottom + MARGEN  // Alto dinámico basado en el último botón
+                btnCerrarSesion.Bottom + MARGEN
             );
         }
 
         private void AbrirModulo(string nombreFormulario)
         {
-            // Por ahora solo mostramos un mensaje
-            MessageBox.Show($"Abriendo módulo: {nombreFormulario}", "Información",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             // Aquí iría la lógica para abrir cada formulario
-            // Form formulario = null;
-            // switch (nombreFormulario)
-            // {
-            //     case "VentasForm":
-            //         formulario = new VentasForm();
-            //         break;
-            //     // ... etc
-            // }
-            // 
-            // if (formulario != null)
-            // {
-            //     formulario.ShowDialog();
-            // }
+            Form formulario = null;
+            switch (nombreFormulario)
+            {
+                case "UsuariosForm":
+                    formulario = new UserManagerForm();
+                    break;
+            }
+            
+            if (formulario != null)
+            {
+                formulario.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show($"abriendo módulo: {nombreFormulario}", "información",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
         }
 
         private void CerrarSesion()
@@ -98,6 +101,7 @@ namespace ElectroHogar.Presentacion.Forms
             if (MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Confirmar",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                LoginNegocio.Reset(); //reset singleton class login negocio
                 var loginForm = new LoginForm();
                 this.Hide();
                 loginForm.ShowDialog();
