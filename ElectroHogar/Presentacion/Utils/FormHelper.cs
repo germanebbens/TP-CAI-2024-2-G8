@@ -328,5 +328,36 @@ namespace ElectroHogar.Presentacion.Utils
             form.Controls.AddRange(new Control[] { lblPassword, txtPassword, btnCopiar, btnCerrar });
             form.ShowDialog();
         }
+
+        public static TextBox CrearTextBoxBusqueda(string placeholder = "Escriba para filtrar...")
+        {
+            var textBox = new TextBox
+            {
+                Width = 300,
+                ForeColor = Color.Gray,
+                Text = placeholder,
+                Font = FuenteNormal
+            };
+
+            textBox.GotFocus += (s, e) => {
+                if (textBox.Text == placeholder)
+                {
+                    textBox.Text = "";
+                    textBox.ForeColor = Color.Black;
+                }
+            };
+
+            textBox.LostFocus += (s, e) => {
+                if (string.IsNullOrWhiteSpace(textBox.Text))
+                {
+                    textBox.Text = placeholder;
+                    textBox.ForeColor = Color.Gray;
+                }
+            };
+
+            AgregarEfectoFoco(textBox);
+
+            return textBox;
+        }
     }
 }

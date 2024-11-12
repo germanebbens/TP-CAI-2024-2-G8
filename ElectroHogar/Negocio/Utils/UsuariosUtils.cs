@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ElectroHogar.Negocio.Utils
 {
-    public class UserUtils
+    public class UsuariosUtils
     {
         public string GenerarContraseniaTemporal()
         {
@@ -52,6 +52,13 @@ namespace ElectroHogar.Negocio.Utils
                 return (false, "La nueva contraseña debe ser diferente a la actual");
 
             return (true, string.Empty);
+        }
+
+        public static (bool isValid, string message) ValidarExpiracionContraseña(DateTime fechaAlta)
+        {
+            var diasTranscurridos = (DateTime.Today - fechaAlta).TotalDays;
+            return (diasTranscurridos >= 30,
+                diasTranscurridos >= 30 ? string.Empty : "La contraseña aún no ha expirado");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Persistencia;
@@ -6,19 +7,19 @@ using ElectroHogar.Presentacion.Utils;
 
 namespace ElectroHogar.Negocio
 {
-    internal class NuevoUsuario
+    internal class Usuarios
     {
         private readonly UsuariosWS _usuarioWS;
         private readonly ClavesTemporalesDB _clavesTemporalesDB;
         private readonly LoginDB _loginDB;
-        private readonly UserUtils _utils;
+        private readonly UsuariosUtils _utils;
 
-        public NuevoUsuario()
+        public Usuarios()
         {
             _usuarioWS = new UsuariosWS();
             _clavesTemporalesDB = new ClavesTemporalesDB();
             _loginDB = new LoginDB();
-            _utils = new UserUtils();
+            _utils = new UsuariosUtils();
         }
 
         public AddUser RegistrarNuevoUsuario(AddUser datosUsuario)
@@ -63,6 +64,7 @@ namespace ElectroHogar.Negocio
                 throw new Exception($"Error al crear el usuario: {ex.Message}");
             }
         }
+        
         public User BuscarUsuarioPorUsername(string username)
         {
             return _usuarioWS.BucarUsuarioPorUsername(username);
@@ -136,6 +138,19 @@ namespace ElectroHogar.Negocio
             // Only allow to create salespeople and supervisors
             if (perfil != (int)PerfilUsuario.Vendedor && perfil != (int)PerfilUsuario.Supervisor)
                 throw new Exception("Solo se pueden crear usuarios con perfil Vendedor o Supervisor");
+        }
+
+        public List<User> BuscarUsuariosActivos()
+        {
+            try
+            {
+                return _usuarioWS.BuscarUsuariosActivos();
+            }
+            catch (Exception ex)
+            {
+                // TODO: loggear error
+                throw new Exception($"Error al obtener usuarios activos: {ex.Message}");
+            }
         }
     }
 }

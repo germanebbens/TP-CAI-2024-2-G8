@@ -9,35 +9,17 @@ namespace ElectroHogar.Presentacion.Forms
 {
     public partial class UserManagerForm : Form
     {
-        private readonly NuevoUsuario _usuarioService;
+        private readonly Usuarios _usuarioService;
         private readonly Label lblEstado;
-        private readonly Panel panelBusqueda;
-        private readonly Panel panelResultado;
         private readonly Panel panelAltaUsuario;
-        private readonly TextBox txtBusqueda;
-        private readonly Label lblResultado;
         private bool acordeonAbierto = false;
 
         public UserManagerForm()
         {
             InitializeComponent();
-            _usuarioService = new NuevoUsuario();
+            _usuarioService = new Usuarios();
             lblEstado = FormHelper.CrearLabelEstado();
-
-            // Inicializar paneles
-            panelBusqueda = FormHelper.CrearPanelBusqueda(
-                "Buscar por Nombre de Usuario:",
-                (s, e) => RealizarBusqueda(),
-                out txtBusqueda
-            );
-
-            panelResultado = FormHelper.CrearPanelResultadoBusqueda(
-                (s, e) => DeshabilitarUsuario(),
-                out lblResultado
-            );
-
             panelAltaUsuario = CrearPanelAltaUsuario();
-
             ConfigurarFormulario();
         }
 
@@ -51,32 +33,27 @@ namespace ElectroHogar.Presentacion.Forms
             var panelSuperior = FormHelper.CrearPanelSuperior("Gestión de Usuarios");
             this.Controls.Add(panelSuperior);
 
-            var btnVolver = FormHelper.CrearBotonPrimario("Volver", 100);
-            btnVolver.Location = new Point(50, panelSuperior.Bottom + 20);
-            btnVolver.Click += (s, e) => {
-                this.Close();
+            // Botón Ver Usuarios Activos
+            var btnUsuariosActivos = FormHelper.CrearBotonPrimario("Ver Usuarios Activos");
+            btnUsuariosActivos.Location = new Point(FormHelper.MARGEN, panelSuperior.Bottom + 20);
+            btnUsuariosActivos.Click += (s, e) => {
+                var formUsuariosActivos = new ActiveUsersForm();
+                formUsuariosActivos.ShowDialog();
             };
 
-            panelBusqueda.Location = new Point(0, btnVolver.Bottom + 20);
-            panelResultado.Location = new Point(0, panelBusqueda.Bottom);
-            lblEstado.Location = new Point(50, panelResultado.Bottom + 20);
-            panelAltaUsuario.Location = new Point(0, lblEstado.Bottom + 20);
+            var btnVolver = FormHelper.CrearBotonPrimario("Volver", 100);
+            btnVolver.Location = new Point(btnUsuariosActivos.Right + 20, panelSuperior.Bottom + 20);
+            btnVolver.Click += (s, e) => this.Close();
+
+            lblEstado.Location = new Point(FormHelper.MARGEN, btnUsuariosActivos.Bottom + 10);
+            panelAltaUsuario.Location = new Point(0, lblEstado.Bottom + 10);
 
             this.Controls.AddRange(new Control[] {
                 btnVolver,
-                panelBusqueda,
-                panelResultado,
+                btnUsuariosActivos,
                 lblEstado,
                 panelAltaUsuario
             });
-        }
-        
-        private void LimpiarBusqueda()
-        {
-            // Limpiar controles de búsqueda
-            txtBusqueda.Text = string.Empty;
-            panelResultado.Visible = false;
-            FormHelper.MostrarEstado(lblEstado, "", false);
         }
 
         private Panel CrearPanelAltaUsuario()
@@ -112,8 +89,6 @@ namespace ElectroHogar.Presentacion.Forms
             var txtEmail = FormHelper.CrearCampoTexto("Email:", "txtEmail", ref currentY, panelContenido);
             var dtpFechaNacimiento = FormHelper.CrearCampoFecha("Fecha de Nacimiento:", "dtpFechaNacimiento", ref currentY, panelContenido);
             var txtUsername = FormHelper.CrearCampoTexto("Nombre de Usuario:", "txtUsername", ref currentY, panelContenido);
-
-            // Combo de perfiles con nombre asignado
             var cmbPerfil = FormHelper.CrearComboPerfil("Perfil:", "cmbPerfil", ref currentY, panelContenido);
 
             // Botón guardar
@@ -138,72 +113,10 @@ namespace ElectroHogar.Presentacion.Forms
             btnAcordeon.Text = acordeonAbierto ? "- Cerrar" : "+ Agregar Nuevo Usuario";
         }
 
-        private void RealizarBusqueda()
-        {
-            try
-            {
-                var nombreUsuario = txtBusqueda.Text.Trim();
-                if (string.IsNullOrEmpty(nombreUsuario))
-                {
-                    FormHelper.MostrarEstado(lblEstado, "Ingrese un nombre de usuario para buscar", true);
-                    return;
-                }
-
-                User usuario = _usuarioService.BuscarUsuarioPorUsername(nombreUsuario);
-
-                if (usuario != null)
-                {
-                    panelResultado.Visible = true;
-                    var lblResultado = (Label)panelResultado.Controls[0];
-                    lblResultado.Text = $"Usuario: {usuario.NombreUsuario}\nPerfil: {(PerfilUsuario)usuario.Host}";
-
-                    var btnDeshabilitar = (Button)panelResultado.Controls[1];
-                    btnDeshabilitar.Visible = true;
-                    btnDeshabilitar.Tag = usuario.Id.ToString();  // save user_id to deactivate it                }
-                }
-                else
-                {
-                    FormHelper.MostrarEstado(lblEstado, "Usuario no encontrado", true);
-                    panelResultado.Visible = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                FormHelper.MostrarEstado(lblEstado, ex.Message, true);
-                panelResultado.Visible = false;
-            }
-        }
-
-        private void DeshabilitarUsuario()
-        {
-            var btnDeshabilitar = (Button)panelResultado.Controls[1];
-            Guid userId = new Guid((String)btnDeshabilitar.Tag);
-
-            if (MessageBox.Show(
-                $"¿Está seguro que desea deshabilitar al usuario? Esta acción no se puede deshacer.",
-                "Confirmar Deshabilitación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                try
-                {
-                    _usuarioService.DarBajaUsuario(userId);
-                    FormHelper.MostrarEstado(lblEstado, "Usuario deshabilitado exitosamente", false);
-                    panelResultado.Visible = false;
-                    LimpiarBusqueda();
-                }
-                catch (Exception ex)
-                {
-                    FormHelper.MostrarEstado(lblEstado, ex.Message, true);
-                }
-            }
-        }
-
         private void GuardarUsuario()
         {
             try
             {
-                // Obtener referencias a los controles del formulario
                 var panelContenido = (Panel)panelAltaUsuario.Controls[1];
                 var txtNombre = (TextBox)panelContenido.Controls["txtNombre"];
                 var txtApellido = (TextBox)panelContenido.Controls["txtApellido"];
@@ -215,7 +128,6 @@ namespace ElectroHogar.Presentacion.Forms
                 var txtUsername = (TextBox)panelContenido.Controls["txtUsername"];
                 var cmbPerfil = (ComboBox)panelContenido.Controls["cmbPerfil"];
 
-                // Validaciones...
                 if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
                     string.IsNullOrWhiteSpace(txtApellido.Text) ||
                     string.IsNullOrWhiteSpace(txtDNI.Text) ||
@@ -277,11 +189,6 @@ namespace ElectroHogar.Presentacion.Forms
                     comboBox.SelectedIndex = -1;
                 }
             }
-        }
-
-        private void BtnVolver_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

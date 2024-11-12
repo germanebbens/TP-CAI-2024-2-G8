@@ -138,7 +138,7 @@ namespace ElectroHogar.Presentacion.Forms
                 return false;
             }
 
-            var (isValid, message) = UserUtils.ValidarCambioContraseña(
+            var (isValid, message) = UsuariosUtils.ValidarCambioContraseña(
                 txtPasswordActual.Text,
                 txtPasswordNueva.Text
             );

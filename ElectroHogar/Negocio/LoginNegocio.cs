@@ -96,6 +96,33 @@ namespace ElectroHogar.Negocio
             }
         }
 
+        private LoginResult ObtenerPerfilUsuario()
+        {
+            User usuarioActivo = _usuarioWS.BucarUsuarioPorId(_usuarioLogueadoId);
+
+            if (usuarioActivo == null)
+            {
+                return LoginResult.Error(
+                    "Error al obtener el perfil del usuario",
+                    LoginErrorTipo.ErrorWebService
+                );
+            }
+
+            // Checks if the profile (or 'host') is a valid value of PerfilUsuario
+            if (Enum.IsDefined(typeof(PerfilUsuario), usuarioActivo.Host))
+            {
+                var perfil = (PerfilUsuario)usuarioActivo.Host;
+                return LoginResult.Exitoso(perfil, usuarioActivo);
+            }
+            else
+            {
+                return LoginResult.Error(
+                    $"Perfil no reconocido: {usuarioActivo.Host}",
+                    LoginErrorTipo.ErrorWebService
+                );
+            }
+        }
+
         private int ObtenerIntentosFallidos(string usuario)
         {
             try
@@ -138,34 +165,7 @@ namespace ElectroHogar.Negocio
                 Console.WriteLine($"Error al reiniciar intentos: {ex.Message}");
             }
         }
-
-        private LoginResult ObtenerPerfilUsuario()
-        {
-            User usuarioActivo = _usuarioWS.BucarUsuarioPorId(_usuarioLogueadoId);
-
-            if (usuarioActivo == null)
-            {
-                return LoginResult.Error(
-                    "Error al obtener el perfil del usuario",
-                    LoginErrorTipo.ErrorWebService
-                );
-            }
-
-            // Checks if the profile (or 'host') is a valid value of PerfilUsuario
-            if (Enum.IsDefined(typeof(PerfilUsuario), usuarioActivo.Host))
-            {
-                var perfil = (PerfilUsuario)usuarioActivo.Host;
-                return LoginResult.Exitoso(perfil, usuarioActivo);
-            }
-            else
-            {
-                return LoginResult.Error(
-                    $"Perfil no reconocido: {usuarioActivo.Host}",
-                    LoginErrorTipo.ErrorWebService
-                );
-            }
-        }
-
+        
         public string ObtenerUsuarioLogueadoId() => _usuarioLogueadoId;
 
         public bool CambiarContraseña(string username, string passwordActual, string passwordNueva)

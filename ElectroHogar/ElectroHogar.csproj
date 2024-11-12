@@ -54,14 +54,20 @@
     <Compile Include="Datos\ClienteWS.cs" />
     <Compile Include="Datos\ProductoWS.cs" />
     <Compile Include="Datos\ProveedorWS.cs" />
-    <Compile Include="Negocio\NuevoUsuario.cs" />
+    <Compile Include="Negocio\Usuarios.cs" />
     <Compile Include="Negocio\Perfiles.cs" />
-    <Compile Include="Negocio\Utils\UserUtils.cs" />
+    <Compile Include="Negocio\Utils\UsuariosUtils.cs" />
     <Compile Include="Persistencia\WebService\BaseWS.cs" />
     <Compile Include="Persistencia\DataBase\ClavesTemporalesDB.cs" />
     <Compile Include="Persistencia\WebService\ClientesWS.cs" />
     <Compile Include="Persistencia\WebService\ProductosWS.cs" />
     <Compile Include="Persistencia\WebService\ProveedoresWS.cs" />
+    <Compile Include="Presentacion\Forms\ActiveUsersForm .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ActiveUsersForm .Designer.cs">
+      <DependentUpon>ActiveUsersForm .cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Forms\CambiarPasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +94,7 @@
     </Compile>
     <Compile Include="Presentacion\Utils\AplicationManager.cs" />
     <Compile Include="Presentacion\Utils\FormHelper.cs" />
+    <Compile Include="Presentacion\Utils\UserViewModel.cs" />
     <Compile Include="Presentacion\Utils\Validations.cs" />
     <Compile Include="Negocio\LoginNegocio.cs" />
     <Compile Include="Negocio\Utils\LoginUtils.cs" />
