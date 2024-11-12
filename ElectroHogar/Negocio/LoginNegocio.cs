@@ -1,0 +1,214 @@
+﻿using System;
+using ElectroHogar.Persistencia;
+using ElectroHogar.Negocio.Utils;
+using ElectroHogar.Config;
+using ElectroHogar.Datos;
+using System.Windows.Forms;
+
+namespace ElectroHogar.Negocio
+{
+    public class LoginNegocio
+    {
+        //this class is a singleton pattern! it will be instantiated only once during the session
+        private static LoginNegocio _instance;
+        private static readonly object _lock = new object();
+        private readonly ClavesTemporalesDB _clavesTemporalesDB;
+        private readonly UsuariosWS _usuarioWS;
+        private readonly LoginDB _loginDB;
+        private string _usuarioLogueadoId;
+        private readonly int _maxIntentos;
+
+        private LoginNegocio()  // private constructor!
+        {
+            _usuarioWS = new UsuariosWS();
+            _loginDB = new LoginDB();
+            _clavesTemporalesDB = new ClavesTemporalesDB();
+            _maxIntentos = ConfigHelper.GetIntValueOrDefault("MaxIntentosLogin", 3);
+        }
+
+        public static LoginNegocio Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new LoginNegocio();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
+
+        public static void Reset() // when the session is closed - logout
+        {
+            lock (_lock)
+            {
+                _instance = null;
+            }
+        }
+
+        public LoginResult Login(string usuario, string password)
+        {
+            try
+            {
+                return RealizarLogin(usuario, password);
+            }
+            catch (Exception ex)
+            {
+                return LoginResult.Error($"Error en el servidor: {ex.Message}", LoginErrorTipo.ErrorServidor);
+            }
+        }
+
+        private LoginResult RealizarLogin(string usuario, string password)
+        {
+            int intentos = ObtenerIntentosFallidos(usuario);
+            if (intentos >= _maxIntentos)
+            {
+                return LoginResult.ErrorUsuarioBloqueado();
+            }
+
+            try
+            {
+                // Verificar si existe una clave temporal
+                var (claveTemporal, userId) = _clavesTemporalesDB.ObtenerClaveTemporal(usuario);
+
+                if (!string.IsNullOrEmpty(claveTemporal) && claveTemporal == password && !string.IsNullOrEmpty(userId))
+                {
+                    // Si la clave temporal es correcta, guardamos el ID y mandamos a cambiar contraseña
+                    _usuarioLogueadoId = userId;
+                    return LoginResult.RequiereCambioContraseña();
+                }
+
+                // Si no hay clave temporal o no coincide, intentar login normal
+                _usuarioLogueadoId = _usuarioWS.Login(usuario, password);
+                ReiniciarIntentos(usuario);
+                return ObtenerPerfilUsuario();
+            }
+            catch (Exception ex) when (ex.Message.Contains("incorrecto"))
+            {
+                RegistrarIntentoFallido(usuario, intentos);
+                return LoginResult.Error(ex.Message, LoginErrorTipo.CredencialesInvalidas);
+            }
+        }
+
+        private LoginResult ObtenerPerfilUsuario()
+        {
+            User usuarioActivo = _usuarioWS.BucarUsuarioPorId(_usuarioLogueadoId);
+
+            if (usuarioActivo == null)
+            {
+                return LoginResult.Error(
+                    "Error al obtener el perfil del usuario",
+                    LoginErrorTipo.ErrorWebService
+                );
+            }
+
+            // Checks if the profile (or 'host') is a valid value of PerfilUsuario
+            if (Enum.IsDefined(typeof(PerfilUsuario), usuarioActivo.Host))
+            {
+                var perfil = (PerfilUsuario)usuarioActivo.Host;
+                return LoginResult.Exitoso(perfil, usuarioActivo);
+            }
+            else
+            {
+                return LoginResult.Error(
+                    $"Perfil no reconocido: {usuarioActivo.Host}",
+                    LoginErrorTipo.ErrorWebService
+                );
+            }
+        }
+
+        private int ObtenerIntentosFallidos(string usuario)
+        {
+            try
+            {
+                return _loginDB.ObtenerIntentos(usuario);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error al verificar intentos de login");
+            }
+        }
+
+        private void RegistrarIntentoFallido(string usuario, int intentosActuales)
+        {
+            try
+            {
+                var nuevoValor = (intentosActuales + 1).ToString();
+
+                if (intentosActuales == 0)
+                    _loginDB.GuardarIntento(usuario);
+                else
+                    _loginDB.ActualizarIntento(usuario, nuevoValor);
+            }
+            catch (Exception ex)
+            {
+                // TODO: Implementar logging
+                Console.WriteLine($"Error al registrar intento fallido: {ex.Message}");
+            }
+        }
+
+        private void ReiniciarIntentos(string usuario)
+        {
+            try
+            {
+                _loginDB.ActualizarIntento(usuario, "0");
+            }
+            catch (Exception ex)
+            {
+                // TODO: Implementar logging
+                Console.WriteLine($"Error al reiniciar intentos: {ex.Message}");
+            }
+        }
+        
+        public string ObtenerUsuarioLogueadoId() => _usuarioLogueadoId;
+
+        public bool CambiarContraseña(string username, string passwordActual, string passwordNueva)
+        {
+            try
+            {
+                var patchUser = new PatchUser
+                {
+                    NombreUsuario = username,
+                    Contraseña = passwordActual,
+                    ContraseñaNueva = passwordNueva
+                };
+
+                // Verificar si existe una clave temporal para este usuario
+                var (claveTemporal, userId) = _clavesTemporalesDB.ObtenerClaveTemporal(username);
+
+                // Intentar cambiar la contraseña
+                _usuarioWS.CambiarContraseña(patchUser);
+
+                // Si el cambio fue exitoso y existía una clave temporal
+                if (!string.IsNullOrEmpty(claveTemporal) && passwordActual == claveTemporal && !string.IsNullOrEmpty(userId))
+                {
+                    try
+                    {
+                        // Activar el usuario y eliminar la clave temporal
+                        _usuarioWS.ReactivarUsuario(Guid.Parse(userId));
+                        _clavesTemporalesDB.EliminarClaveTemporal(username);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Si falla la activación o eliminación de la clave temporal, loguear el error
+                        // pero no fallar el cambio de contraseña que ya fue exitoso
+                        // TODO: Implementar logging
+                        Console.WriteLine($"Error al finalizar proceso de cambio de contraseña: {ex.Message}");
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al cambiar la contraseña: {ex.Message}");
+            }
+        }
+    }
+}
