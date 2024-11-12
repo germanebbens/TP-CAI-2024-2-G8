@@ -33,7 +33,7 @@ namespace ElectroHogar.Presentacion.Forms
         {
             FormHelper.ConfigurarFormularioBase(this);
             this.Text = "ElectroHogar - Usuarios Activos";
-            this.ClientSize = new Size(FormHelper.ANCHO_FORM, 600);
+            this.ClientSize = new Size(FormHelper.ANCHO_FORM + 30, 630);
             this.AutoScroll = true;
 
             var panelSuperior = FormHelper.CrearPanelSuperior("Usuarios Activos");
@@ -85,21 +85,21 @@ namespace ElectroHogar.Presentacion.Forms
                 Name = "NombreUsuario",
                 HeaderText = "Username",
                 DataPropertyName = "NombreUsuario",
-                Width = 150
+                Width = 90
             },
             new DataGridViewTextBoxColumn
             {
                 Name = "NombreCompleto",
                 HeaderText = "Nombre Completo",
                 DataPropertyName = "NombreCompleto",
-                Width = 200
+                Width = 150
             },
             new DataGridViewTextBoxColumn
             {
                 Name = "Perfil",
                 HeaderText = "Perfil",
                 DataPropertyName = "Perfil",
-                Width = 100
+                Width = 80
             },
             new DataGridViewButtonColumn
             {
@@ -107,7 +107,7 @@ namespace ElectroHogar.Presentacion.Forms
                 HeaderText = "Acción",
                 Text = "Desactivar",
                 UseColumnTextForButtonValue = true,
-                Width = 100
+                Width = 85
             }
             });
 
@@ -120,12 +120,12 @@ namespace ElectroHogar.Presentacion.Forms
             lblEstado.Location = new Point(FormHelper.MARGEN, btnVolver.Bottom + 10);
 
             this.Controls.AddRange(new Control[] {
-            panelSuperior,
-            panelBusqueda,
-            dgvUsuarios,
-            btnVolver,
-            lblEstado
-        });
+                panelSuperior,
+                panelBusqueda,
+                dgvUsuarios,
+                btnVolver,
+                lblEstado
+            });
 
             CargarUsuarios();
         }

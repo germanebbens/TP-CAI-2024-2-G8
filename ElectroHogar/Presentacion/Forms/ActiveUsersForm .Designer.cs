@@ -1,11 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
 using ElectroHogar.Presentacion.Utils;
 
 namespace ElectroHogar.Presentacion.Forms
 {
-    partial class ActiveUsersForm
+    partial class ActiveUsersForm : Form
     {
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         protected override void Dispose(bool disposing)
         {
@@ -20,14 +21,12 @@ namespace ElectroHogar.Presentacion.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(FormHelper.ANCHO_FORM+40, 800);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "ElectroHogar - Usuarios Activos";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+
         }
     }
 }

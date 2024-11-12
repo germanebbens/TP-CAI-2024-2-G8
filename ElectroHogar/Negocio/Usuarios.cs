@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Persistencia;
+using ElectroHogar.Persistencia.Utils;
 using ElectroHogar.Presentacion.Utils;
+using Newtonsoft.Json;
 
 namespace ElectroHogar.Negocio
 {
@@ -70,16 +72,59 @@ namespace ElectroHogar.Negocio
             return _usuarioWS.BucarUsuarioPorUsername(username);
         }
 
-        public void DarBajaUsuario(Guid userId)
+        public void DarBajaUsuario(Guid? userId = null, string username = null)
         {
             try
             {
-                _usuarioWS.BajaUsuario(userId);
+                Guid usuarioId;
+                if (userId.HasValue)
+                {
+                    usuarioId = userId.Value;
+                }
+                else if (!string.IsNullOrEmpty(username))
+                {
+                    var usuario = BuscarUsuarioPorUsername(username);
+                    usuarioId = usuario.Id;
+                }
+                else
+                {
+                    throw new ArgumentException("Debe proporcionar el ID de usuario o el nombre de usuario para dar de baja al usuario.");
+                }
+
+                _usuarioWS.BajaUsuario(usuarioId);
             }
             catch (Exception ex)
             {
                 // TODO: loggear error
-                throw new Exception($"Error al dar de baja al usuario: {ex.Message}");
+                throw new Exception($"Error al dar de baja al usuario: {ex.Message}", ex);
+            }
+        }
+
+        public void ActivarUsuario(Guid? userId = null, string username = null)
+        {
+            try
+            {
+                Guid usuarioId;
+                if (userId.HasValue)
+                {
+                    usuarioId = userId.Value;
+                }
+                else if (!string.IsNullOrEmpty(username))
+                {
+                    var usuario = BuscarUsuarioPorUsername(username);
+                    usuarioId = usuario.Id;
+                }
+                else
+                {
+                    throw new ArgumentException("Debe proporcionar el ID de usuario o el nombre de usuario para dar reactivar al usuario.");
+                }
+
+                _usuarioWS.ReactivarUsuario(usuarioId);
+            }
+            catch (Exception ex)
+            {
+                // TODO: loggear error
+                throw new Exception($"Error al reactivar usuario: {ex.Message}", ex);
             }
         }
 
@@ -151,6 +196,46 @@ namespace ElectroHogar.Negocio
                 // TODO: loggear error
                 throw new Exception($"Error al obtener usuarios activos: {ex.Message}");
             }
+        }
+
+        public void CambiarContraseña(PatchUser user)
+        {
+            try
+            {
+                _usuarioWS.CambiarContraseña(user);
+            }
+            catch (Exception ex)
+            {
+                // TODO: Implementar logging
+                throw new Exception($"Error al cambiar la contraseña del usuario: {ex.Message}", ex);
+            }
+        }
+
+        public User BucarUsuarioPorId(string id)
+        {
+            try
+            {
+                return _usuarioWS.BucarUsuarioPorId(id);
+            }
+            catch (Exception ex)
+            {
+                // TODO: Implementar logging
+                throw new Exception($"Error buscar usuario por ID: {ex.Message}", ex);
+            }
+        }
+
+        public string Login(string username, string password)
+        {
+            try
+            {
+                return _usuarioWS.Login(username, password);
+            }
+            catch (Exception ex)
+            {
+                // TODO: Implementar logging
+                throw new Exception($"Error al realizar el login: {ex.Message}", ex);
+            }
+
         }
     }
 }

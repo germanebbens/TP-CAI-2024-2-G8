@@ -159,6 +159,7 @@ namespace ElectroHogar.Presentacion.Forms
                 };
 
                 AddUser newUser = _usuarioService.RegistrarNuevoUsuario(nuevoUsuario);
+                _usuarioService.DarBajaUsuario(newUser.IdUsuario);
                 FormHelper.MostrarContraseñaTemporal(newUser.Contraseña);
                 ToggleAcordeon();
                 LimpiarFormulario();
