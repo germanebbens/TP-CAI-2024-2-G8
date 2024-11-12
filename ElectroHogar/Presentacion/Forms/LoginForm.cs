@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using ElectroHogar.Negocio;
 using ElectroHogar.Negocio.Utils;
@@ -18,7 +19,6 @@ namespace ElectroHogar.Presentacion.Forms
 
             // Inicializar label de estado
             lblEstado = FormHelper.CrearLabelEstado();
-            lblEstado.Location = new System.Drawing.Point(50, 280);
             this.Controls.Add(lblEstado);
 
             ConfigurarFormulario();
@@ -37,6 +37,8 @@ namespace ElectroHogar.Presentacion.Forms
 
             FormHelper.AgregarEfectoFoco(txtUsuario);
             FormHelper.AgregarEfectoFoco(txtPassword);
+
+            CambiarContraseñaBtn();
         }
 
         private void IniciarSesionBtn(object sender, EventArgs e)
@@ -74,6 +76,41 @@ namespace ElectroHogar.Presentacion.Forms
             }
         }
 
+        private void CambiarContraseñaBtn()
+        {
+            var btnCambiarPass = new Button
+            {
+                Text = "CAMBIAR CONTRASEÑA",
+                Location = new System.Drawing.Point(button1.Left, button1.Bottom + 10),
+                Size = button1.Size,
+                BackColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font(FormHelper.FuenteNormal, FontStyle.Bold),
+                ForeColor = FormHelper.ColorPrimario
+            };
+
+            btnCambiarPass.Click += (s, e) =>
+            {
+                var username = txtUsuario.Text.Trim();
+                if (string.IsNullOrEmpty(username))
+                {
+                    FormHelper.MostrarEstado(lblEstado, "Debe ingresar un nombre de usuario", true);
+                    return;
+                }
+
+                var cambioForm = new CambiarPasswordForm(username);
+                cambioForm.ShowDialog();
+            };
+
+            this.Controls.Add(btnCambiarPass);
+
+            // Ajustar la posición del label de estado
+            lblEstado.Location = new System.Drawing.Point(
+                lblEstado.Location.X,
+                btnCambiarPass.Bottom + 10
+            );
+        }
+
         private bool ValidarFormulario()
         {
             var (usuarioValido, mensajeUsuario) = Validations.ValidarUsuario(txtUsuario.Text);
@@ -104,6 +141,28 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void ManejarLoginExitoso(LoginResult resultado)
         {
+            // Si el login falló por requerir cambio de contraseña temporal
+            if (resultado.TipoError == LoginErrorTipo.RequiereCambioContraseña)
+            {
+                var cambioForm = new CambiarPasswordForm(txtUsuario.Text, true);
+                if (cambioForm.ShowDialog() != DialogResult.OK)
+                {
+                    FormHelper.MostrarEstado(lblEstado, "Debe cambiar su contraseña temporal antes de continuar", true);
+                    return;
+                }
+                // Después de cambiar la contraseña, limpiar y solicitar nuevo login
+                txtPassword.Clear();
+                txtPassword.Focus();
+                FormHelper.MostrarEstado(lblEstado, "Por favor, inicie sesión con su nueva contraseña", false);
+                return;
+            }
+
+            if (!resultado.Exito)
+            {
+                ManejarLoginFallido(resultado);
+                return;
+            }
+
             FormHelper.MostrarEstado(lblEstado, $"Bienvenido! Iniciando sesión como {resultado.Perfil}...");
             System.Threading.Thread.Sleep(1000);
 

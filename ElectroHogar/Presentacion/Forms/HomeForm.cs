@@ -75,7 +75,6 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void AbrirModulo(string nombreFormulario)
         {
-            // Aquí iría la lógica para abrir cada formulario
             Form formulario = null;
             switch (nombreFormulario)
             {
@@ -83,16 +82,19 @@ namespace ElectroHogar.Presentacion.Forms
                     formulario = new UserManagerForm();
                     break;
             }
-            
+
             if (formulario != null)
             {
+                this.Hide();
+                formulario.FormClosed += (s, e) => {
+                    this.Show();
+                };
                 formulario.ShowDialog();
             }
             else
             {
                 MessageBox.Show($"abriendo módulo: {nombreFormulario}", "información",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             }
         }
 

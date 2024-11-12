@@ -3,6 +3,7 @@ using ElectroHogar.Persistencia;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Config;
 using ElectroHogar.Datos;
+using System.Windows.Forms;
 
 namespace ElectroHogar.Negocio
 {
@@ -73,31 +74,17 @@ namespace ElectroHogar.Negocio
 
             try
             {
+                // Verificar si existe una clave temporal
                 var (claveTemporal, userId) = _clavesTemporalesDB.ObtenerClaveTemporal(usuario);
 
-                if (!string.IsNullOrEmpty(claveTemporal) && claveTemporal == password)
+                if (!string.IsNullOrEmpty(claveTemporal) && claveTemporal == password && !string.IsNullOrEmpty(userId))
                 {
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(userId))
-                        {
-                            _usuarioWS.ReactivarUsuario(Guid.Parse(userId)); 
-
-                            _clavesTemporalesDB.EliminarClaveTemporal(usuario);
-
-                            _usuarioLogueadoId = userId;
-                            ReiniciarIntentos(usuario);
-
-                            return ObtenerPerfilUsuario();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        return LoginResult.Error($"Error al activar el usuario: {ex.Message}", LoginErrorTipo.ErrorServidor);
-                    }
+                    // Si la clave temporal es correcta, guardamos el ID y mandamos a cambiar contraseña
+                    _usuarioLogueadoId = userId;
+                    return LoginResult.RequiereCambioContraseña();
                 }
 
-                // no hay clave temporal o no coincide, intentar login normal
+                // Si no hay clave temporal o no coincide, intentar login normal
                 _usuarioLogueadoId = _usuarioWS.Login(usuario, password);
                 ReiniciarIntentos(usuario);
                 return ObtenerPerfilUsuario();
@@ -180,5 +167,48 @@ namespace ElectroHogar.Negocio
         }
 
         public string ObtenerUsuarioLogueadoId() => _usuarioLogueadoId;
+
+        public bool CambiarContraseña(string username, string passwordActual, string passwordNueva)
+        {
+            try
+            {
+                var patchUser = new PatchUser
+                {
+                    NombreUsuario = username,
+                    Contraseña = passwordActual,
+                    ContraseñaNueva = passwordNueva
+                };
+
+                // Verificar si existe una clave temporal para este usuario
+                var (claveTemporal, userId) = _clavesTemporalesDB.ObtenerClaveTemporal(username);
+
+                // Intentar cambiar la contraseña
+                _usuarioWS.CambiarContraseña(patchUser);
+
+                // Si el cambio fue exitoso y existía una clave temporal
+                if (!string.IsNullOrEmpty(claveTemporal) && passwordActual == claveTemporal && !string.IsNullOrEmpty(userId))
+                {
+                    try
+                    {
+                        // Activar el usuario y eliminar la clave temporal
+                        _usuarioWS.ReactivarUsuario(Guid.Parse(userId));
+                        _clavesTemporalesDB.EliminarClaveTemporal(username);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Si falla la activación o eliminación de la clave temporal, loguear el error
+                        // pero no fallar el cambio de contraseña que ya fue exitoso
+                        // TODO: Implementar logging
+                        Console.WriteLine($"Error al finalizar proceso de cambio de contraseña: {ex.Message}");
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al cambiar la contraseña: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ElectroHogar.Presentacion.Utils;
+using System;
+using System.Linq;
 
 namespace ElectroHogar.Negocio.Utils
 {
@@ -36,6 +38,20 @@ namespace ElectroHogar.Negocio.Utils
             }
 
             return new string(password);
+        }
+
+        public static (bool isValid, string message) ValidarCambioContraseña(string contraseñaActual, string contraseñaNueva)
+        {
+            // Validar que la nueva contraseña cumpla con todos los requisitos
+            var (isValid, message) = Validations.ValidarPassword(contraseñaNueva);
+            if (!isValid)
+                return (false, message);
+
+            // Validar que la nueva contraseña sea diferente a la actual
+            if (contraseñaActual == contraseñaNueva)
+                return (false, "La nueva contraseña debe ser diferente a la actual");
+
+            return (true, string.Empty);
         }
     }
 }

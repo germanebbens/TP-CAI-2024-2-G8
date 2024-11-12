@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ElectroHogar.Presentacion.Utils
@@ -20,6 +21,8 @@ namespace ElectroHogar.Presentacion.Utils
             public const string PASSWORD_LENGTH = "La contraseña debe tener entre 8 y 15 caracteres";
             public const string USUARIO_INVALIDO = "El usuario no puede contener caracteres especiales";
             public const string EMAIL_INVALIDO = "El email no tiene un formato válido";
+            public const string PASSWORD_REQUIRE_MAYUSCULA = "La contraseña debe contener al menos una letra mayúscula";
+            public const string PASSWORD_REQUIRE_NUMERO = "La contraseña debe contener al menos un número";
         }
 
         public static (bool isValid, string message) ValidarUsuario(string usuario)
@@ -44,6 +47,14 @@ namespace ElectroHogar.Presentacion.Utils
 
             if (password.Length < MIN_LENGTH_PASSWORD || password.Length > MAX_LENGTH_PASSWORD)
                 return (false, ValidationMessages.PASSWORD_LENGTH);
+
+            // Validar que contenga al menos una mayúscula
+            if (!password.Any(char.IsUpper))
+                return (false, ValidationMessages.PASSWORD_REQUIRE_MAYUSCULA);
+
+            // Validar que contenga al menos un número
+            if (!password.Any(char.IsDigit))
+                return (false, ValidationMessages.PASSWORD_REQUIRE_NUMERO);
 
             return (true, string.Empty);
         }

@@ -54,7 +54,7 @@ namespace ElectroHogar.Negocio
                     usuarioActivo.Id.ToString()
                 );
 
-                DarBajaUsuario(usuarioActivo.Id);
+                // DarBajaUsuario(usuarioActivo.Id);
                 return nuevoUsuario;
             }
             catch (Exception ex)

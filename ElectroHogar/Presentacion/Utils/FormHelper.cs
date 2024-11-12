@@ -2,6 +2,7 @@
 using ElectroHogar.Datos;
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ElectroHogar.Presentacion.Utils
@@ -250,6 +251,82 @@ namespace ElectroHogar.Presentacion.Utils
 
             panel.Controls.AddRange(new Control[] { lblResultado, btnDeshabilitar });
             return panel;
+        }
+
+        public static void MostrarContraseñaTemporal(string password)
+        {
+            var form = new Form()
+            {
+                Width = 400,
+                Height = 200,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = "Contraseña Temporal",
+                StartPosition = FormStartPosition.CenterScreen,
+                MaximizeBox = false,
+                MinimizeBox = false
+            };
+
+            var lblPassword = new Label()
+            {
+                Text = $"Contraseña temporal:",
+                AutoSize = true,
+                Location = new Point(20, 20),
+                Font = FuenteNormal
+            };
+
+            var txtPassword = new TextBox()
+            {
+                Text = password,
+                ReadOnly = true,
+                Location = new Point(20, 50),
+                Width = 340,
+                Font = FuenteNormal
+            };
+
+            var btnCopiar = new Button()
+            {
+                Text = "COPIAR AL PORTAPAPELES",
+                Location = new Point(20, 90),
+                Width = 340,
+                Height = 35,
+                BackColor = ColorPrimario,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font(FuenteNormal, FontStyle.Bold)
+            };
+
+            var btnCerrar = new Button()
+            {
+                Text = "CERRAR",
+                DialogResult = DialogResult.OK,
+                Location = new Point(20, 130),
+                Width = 340,
+                Height = 35,
+                BackColor = Color.White,
+                ForeColor = ColorPrimario,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font(FuenteNormal, FontStyle.Bold)
+            };
+
+            btnCopiar.Click += (s, e) =>
+            {
+                try
+                {
+                    Clipboard.SetText(password);
+                    txtPassword.ForeColor = Color.Green;
+                    btnCopiar.Text = "¡COPIADO!";
+                    btnCopiar.BackColor = Color.Green;
+                }
+                catch
+                {
+                    txtPassword.ForeColor = Color.Red;
+                    btnCopiar.Text = "ERROR AL COPIAR";
+                    btnCopiar.BackColor = Color.Red;
+                }
+            };
+
+            form.Controls.AddRange(new Control[] { lblPassword, txtPassword, btnCopiar, btnCerrar });
+            form.ShowDialog();
         }
     }
 }

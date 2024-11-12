@@ -62,11 +62,11 @@
     <Compile Include="Persistencia\WebService\ClientesWS.cs" />
     <Compile Include="Persistencia\WebService\ProductosWS.cs" />
     <Compile Include="Persistencia\WebService\ProveedoresWS.cs" />
-    <Compile Include="Presentacion\Forms\AltaUsuario.cs">
+    <Compile Include="Presentacion\Forms\CambiarPasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentacion\Forms\AltaUsuario.Designer.cs">
-      <DependentUpon>AltaUsuario.cs</DependentUpon>
+    <Compile Include="Presentacion\Forms\CambiarPasswordForm.Designer.cs">
+      <DependentUpon>CambiarPasswordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Forms\HomeForm.cs">
       <SubType>Form</SubType>

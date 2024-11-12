@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ElectroHogar.Config;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio;
 using ElectroHogar.Presentacion.Utils;
@@ -56,7 +55,6 @@ namespace ElectroHogar.Presentacion.Forms
             btnVolver.Location = new Point(50, panelSuperior.Bottom + 20);
             btnVolver.Click += (s, e) => {
                 this.Close();
-                new HomeForm(PerfilUsuario.Administrador, "admin").Show();
             };
 
             panelBusqueda.Location = new Point(0, btnVolver.Bottom + 20);
@@ -206,9 +204,7 @@ namespace ElectroHogar.Presentacion.Forms
             try
             {
                 // Obtener referencias a los controles del formulario
-                var panelContenido = (Panel)panelAltaUsuario.Controls[1]; // Panel contenido del acordeón
-
-                // Buscar los controles por índice (según el orden en que fueron agregados)
+                var panelContenido = (Panel)panelAltaUsuario.Controls[1];
                 var txtNombre = (TextBox)panelContenido.Controls["txtNombre"];
                 var txtApellido = (TextBox)panelContenido.Controls["txtApellido"];
                 var txtDNI = (TextBox)panelContenido.Controls["txtDNI"];
@@ -219,7 +215,7 @@ namespace ElectroHogar.Presentacion.Forms
                 var txtUsername = (TextBox)panelContenido.Controls["txtUsername"];
                 var cmbPerfil = (ComboBox)panelContenido.Controls["cmbPerfil"];
 
-                // Validar que todos los campos requeridos estén completos
+                // Validaciones...
                 if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
                     string.IsNullOrWhiteSpace(txtApellido.Text) ||
                     string.IsNullOrWhiteSpace(txtDNI.Text) ||
@@ -232,13 +228,11 @@ namespace ElectroHogar.Presentacion.Forms
                     throw new Exception("Todos los campos son requeridos");
                 }
 
-                // Validar que el DNI sea un número válido
                 if (!int.TryParse(txtDNI.Text, out int dni))
                 {
                     throw new Exception("El DNI debe ser un número válido");
                 }
 
-                // Crear objeto AddUser con los datos del formulario
                 var nuevoUsuario = new AddUser
                 {
                     Nombre = txtNombre.Text.Trim(),
@@ -249,13 +243,14 @@ namespace ElectroHogar.Presentacion.Forms
                     Email = txtEmail.Text.Trim(),
                     FechaNacimiento = dtpFechaNacimiento.Value,
                     NombreUsuario = txtUsername.Text.Trim(),
-                    Host = (int)cmbPerfil.SelectedValue // Asumiendo que el ComboBox tiene configurado el ValueMember
+                    Host = (int)cmbPerfil.SelectedValue
                 };
 
                 AddUser newUser = _usuarioService.RegistrarNuevoUsuario(nuevoUsuario);
+                FormHelper.MostrarContraseñaTemporal(newUser.Contraseña);
                 ToggleAcordeon();
                 LimpiarFormulario();
-                FormHelper.MostrarEstado(lblEstado, $"Usuario creado exitosamente. La contraseña temporal ({newUser.Contraseña}) ha sido guardada.", false);
+                FormHelper.MostrarEstado(lblEstado, "Usuario creado exitosamente.", false);
             }
             catch (Exception ex)
             {

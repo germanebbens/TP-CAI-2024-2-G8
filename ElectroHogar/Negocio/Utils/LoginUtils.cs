@@ -3,39 +3,58 @@ using ElectroHogar.Datos;
 
 namespace ElectroHogar.Negocio.Utils
 {
+    public class LoginResult
+    {
+        public bool Exito { get; private set; }
+        public string Mensaje { get; private set; }
+        public LoginErrorTipo? TipoError { get; private set; }
+        public PerfilUsuario? Perfil { get; private set; }
+
+        private LoginResult() { }
+
+        public static LoginResult Exitoso(PerfilUsuario perfil, User usuario)
+        {
+            return new LoginResult
+            {
+                Exito = true,
+                Perfil = perfil,
+                Mensaje = string.Empty
+            };
+        }
+
+        public static LoginResult RequiereCambioContraseña()
+        {
+            return new LoginResult
+            {
+                Exito = false,
+                Mensaje = "Debe cambiar su contraseña temporal",
+                TipoError = LoginErrorTipo.RequiereCambioContraseña
+            };
+        }
+
+        public static LoginResult Error(string mensaje, LoginErrorTipo tipo)
+        {
+            return new LoginResult
+            {
+                Exito = false,
+                Mensaje = mensaje,
+                TipoError = tipo
+            };
+        }
+
+        public static LoginResult ErrorUsuarioBloqueado()
+        {
+            return Error("Usuario bloqueado por exceder el máximo de intentos",
+                LoginErrorTipo.UsuarioBloqueado);
+        }
+    }
+
     public enum LoginErrorTipo
     {
         CredencialesInvalidas,
         UsuarioBloqueado,
-        ErrorServidor,
         ErrorWebService,
-        ErrorBaseDatos
-    }
-
-    public class LoginResult
-    {
-        public string Mensaje { get; }
-        public bool Exito { get; }
-        public User Usuario { get; }
-        public LoginErrorTipo? TipoError { get; }
-        public PerfilUsuario? Perfil { get; }
-
-        private LoginResult(string mensaje, bool exito, User usuarioActivo = null, PerfilUsuario? perfil = null, LoginErrorTipo? tipoError = null)
-        {
-            Mensaje = mensaje;
-            Exito = exito;
-            Perfil = perfil;
-            TipoError = tipoError;
-            Usuario = usuarioActivo;
-        }
-
-        public static LoginResult Exitoso(PerfilUsuario perfil, User usuarioActivo) =>
-            new LoginResult(perfil.ToString(), true, usuarioActivo, perfil);
-
-        public static LoginResult Error(string mensaje, LoginErrorTipo tipo) =>
-            new LoginResult(mensaje, false, tipoError: tipo);
-
-        public static LoginResult ErrorUsuarioBloqueado() =>
-            Error("Usuario bloqueado por exceso de intentos.", LoginErrorTipo.UsuarioBloqueado);
+        ErrorServidor,
+        RequiereCambioContraseña
     }
 }
