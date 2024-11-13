@@ -8,6 +8,7 @@ namespace ElectroHogar.Persistencia
     public abstract class BaseWS
     {
         protected readonly string _adminId;
+        public string AdminId => _adminId;
 
         protected BaseWS()
         {
