@@ -409,6 +409,15 @@ namespace ElectroHogar.Presentacion.Utils
                 Texto = "Seleccionar",
                 RequiereConfirmacion = false,
                 Accion = (row) => {
+                    if (int.Parse(row.Cells["Stock"].Value.ToString()) <= 0)
+                    {
+                        MessageBox.Show("No hay stock disponible para este producto",
+                            "Stock no disponible",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
+
                     var producto = new ProductoList
                     {
                         Id = Guid.Parse(row.Cells["Id"].Value.ToString()),
@@ -419,7 +428,6 @@ namespace ElectroHogar.Presentacion.Utils
                     };
 
                     _onSeleccion?.Invoke(producto);
-
                     var form = row.DataGridView.FindForm();
                     if (form != null)
                     {

@@ -21,9 +21,11 @@ namespace ElectroHogar.Presentacion.Forms
         private ClienteList _clienteSeleccionado;
         private List<ItemVenta> _items = new List<ItemVenta>();
         private readonly int ANCHO;
+        private VentaCompuesta _venta;
 
         public VentasManagerForm()
         {
+            _venta = new VentaCompuesta();
             ANCHO = FormHelper.ANCHO_FORM + 50;
             InitializeComponent();
             _ventasService = new Ventas();
@@ -345,7 +347,7 @@ namespace ElectroHogar.Presentacion.Forms
                         Location = new Point(20, 20),
                         Width = 250,
                         Minimum = 1,
-                        Maximum = producto.Stock,
+                        Maximum = 99999999999,
                         Value = 1
                     };
 
@@ -360,11 +362,24 @@ namespace ElectroHogar.Presentacion.Forms
 
                     if (cantidadForm.ShowDialog() == DialogResult.OK)
                     {
+                        int cantidadSolicitada = (int)numCantidad.Value;
+                        int cantidadFinal = cantidadSolicitada;
+
+                        if (cantidadSolicitada > producto.Stock)
+                        {
+                            cantidadFinal = producto.Stock;
+                            MessageBox.Show(
+                                $"No hay suficiente stock. Se agregarán {cantidadFinal} unidades que es el máximo disponible.",
+                                "Stock limitado",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                        }
+
                         var item = new ItemVenta
                         {
                             IdProducto = producto.Id,
                             NombreProducto = producto.Nombre,
-                            Cantidad = (int)numCantidad.Value,
+                            Cantidad = cantidadFinal,
                             Precio = producto.Precio,
                             Categoria = producto.IdCategoria
                         };
@@ -379,7 +394,7 @@ namespace ElectroHogar.Presentacion.Forms
             var formProductos = new BaseListForm(config);
             formProductos.ShowDialog();
         }
-        
+
         private void ActualizarGridProductos()
         {
             var dgvProductos = (DataGridView)panelProductos.Controls["dgvProductos"];
@@ -398,8 +413,8 @@ namespace ElectroHogar.Presentacion.Forms
             var lblDescuentos = (Label)panelResumen.Controls["lblDescuentos"];
             var lblTotal = (Label)panelResumen.Controls["lblTotal"];
 
-            // Calculate applicable discounts
             lstDescuentos.Items.Clear();
+            _venta.Descuentos.Clear();
             double totalDescuento = 0;
 
             // Electro Hogar Discount
@@ -407,41 +422,44 @@ namespace ElectroHogar.Presentacion.Forms
                 .Where(i => i.Categoria == Categoria.ElectroHogar)
                 .Sum(i => i.Subtotal);
 
-            if (montoElectroHogar > 100000)
+            if (montoElectroHogar > 100000 && !_venta.Descuentos.Contains("5% Descuento Electro Hogar"))
             {
                 var descuentoElectroHogar = montoElectroHogar * 0.05;
-                lstDescuentos.Items.Add($"5% Descuento Electro Hogar: ${descuentoElectroHogar:N2}");
+                var textoDescuento = $"5% Descuento Electro Hogar: ${descuentoElectroHogar:N2}";
+                lstDescuentos.Items.Add(textoDescuento);
+                _venta.Descuentos.Add(textoDescuento);
                 totalDescuento += descuentoElectroHogar;
             }
 
             // New Customer Discount
-            if (_clienteSeleccionado != null)
+            if (_clienteSeleccionado != null && !_venta.Descuentos.Contains("5% Descuento Cliente Nuevo"))
             {
                 var clientesService = new Clientes();
                 if (clientesService.EsClienteNuevo(_clienteSeleccionado.Id))
                 {
                     var montoTotal = _items.Sum(i => i.Subtotal);
                     var descuentoClienteNuevo = montoTotal * 0.05;
-                    lstDescuentos.Items.Add($"5% Descuento Cliente Nuevo: ${descuentoClienteNuevo:N2}");
+                    var textoDescuento = $"5% Descuento Cliente Nuevo: ${descuentoClienteNuevo:N2}";
+                    lstDescuentos.Items.Add(textoDescuento);
+                    _venta.Descuentos.Add(textoDescuento);
                     totalDescuento += descuentoClienteNuevo;
                 }
             }
 
-            // Calculate final total
             double subtotal = _items.Sum(i => i.Subtotal);
             double total = subtotal - totalDescuento;
 
-            // Update the labels
-            if (lblSubtotal != null)
-                lblSubtotal.Text = $"Subtotal: ${subtotal:N2}";
+            // Update labels
+            lblSubtotal.Text = $"Subtotal: ${subtotal:N2}";
+            lblTotal.Text = $"Total: ${total:N2}";
 
-            if (lblDescuentos != null)
-                lblDescuentos.Text = $"Descuentos:";
-
-            if (lblTotal != null)
-                lblTotal.Text = $"Total: ${total:N2}";
+            // Update venta
+            _venta.Subtotal = subtotal;
+            _venta.TotalDescuentos = totalDescuento;
+            _venta.MontoTotal = total;
+            _venta.Items = new List<ItemVenta>(_items);
         }
-
+        
         private void ConfirmarVenta()
         {
             try
@@ -456,14 +474,11 @@ namespace ElectroHogar.Presentacion.Forms
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
 
-                var venta = new VentaCompuesta
-                {
-                    IdCliente = _clienteSeleccionado.Id,
-                    Items = _items
-                };
-
-                _ventasService.RegistrarVenta(venta);
+                _venta.IdCliente = _clienteSeleccionado.Id;
+                _ventasService.RegistrarVenta(_venta);
                 FormHelper.MostrarEstado(lblEstado, "Venta registrada exitosamente", false);
+                var remitoForm = new RemitoForm(_venta, _clienteSeleccionado);
+                remitoForm.ShowDialog();
                 LimpiarFormulario();
             }
             catch (Exception ex)

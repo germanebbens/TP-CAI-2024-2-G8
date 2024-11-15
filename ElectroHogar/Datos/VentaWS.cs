@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ElectroHogar.Datos
 {
@@ -28,21 +29,13 @@ namespace ElectroHogar.Datos
     public class VentaCompuesta
     {
         public Guid IdCliente { get; set; }
-        public Guid IdUsuario { get; set; }
+        public Guid IdUsuario {get; set; }
         public List<ItemVenta> Items { get; set; } = new List<ItemVenta>();
-        public double MontoTotal => CalcularMontoTotal();
+        public double Subtotal { get; set; }
         public List<string> Descuentos { get; set; } = new List<string>();
+        public double TotalDescuentos { get; set; }
+        public double MontoTotal { get; set; }
 
-        private double CalcularMontoTotal()
-        {
-            double total = 0;
-            foreach (var item in Items)
-            {
-                total += item.Cantidad * item.Precio;
-            }
-            // TODO: APLICAR los descuentos
-            return total;
-        }
     }
 
     public class ItemVenta

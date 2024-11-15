@@ -86,6 +86,12 @@
     <Compile Include="Presentacion\Forms\ClienteEdicionForm.Designer.cs">
       <DependentUpon>ClienteEdicionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Forms\DevolucionManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\DevolucionManagerForm.Designer.cs">
+      <DependentUpon>DevolucionManagerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Forms\HomeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,6 +115,12 @@
     </Compile>
     <Compile Include="Presentacion\Forms\ProveedorManagerForm.Designer.cs">
       <DependentUpon>ProveedorManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\RemitoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\RemitoForm.Designer.cs">
+      <DependentUpon>RemitoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Forms\UserManagerForm.cs">
       <SubType>Form</SubType>

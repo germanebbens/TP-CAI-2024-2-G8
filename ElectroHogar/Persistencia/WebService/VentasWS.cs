@@ -39,7 +39,7 @@ namespace ElectroHogar.Persistencia
 
         public void DevolverVenta(Guid idVenta)
         {
-            var permisos = new { id = idVenta, idUsuario = _adminId };
+            var permisos = new { id = idVenta, idUsuario = usuarioLogueadoId };
             var response = WebHelper.Patch("Venta/DevolverVenta",
                 JsonConvert.SerializeObject(permisos));
             DeserializarRespuesta<object>(response);

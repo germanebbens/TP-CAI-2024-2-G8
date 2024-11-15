@@ -77,18 +77,6 @@ namespace ElectroHogar.Negocio
                 .ToList();
 
             double montoElectroHogar = productosElectroHogar.Sum(i => i.Subtotal);
-            if (montoElectroHogar > MONTO_MINIMO_DESCUENTO)
-            {
-                venta.Descuentos.Add($"Descuento Electro Hogar {DESCUENTO_ELECTRO_HOGAR * 100}%");
-                // Aquí aplicaríamos el descuento al precio de los productos
-            }
-
-            // Descuento por Cliente Nuevo
-            if (_clientesService.EsClienteNuevo(venta.IdCliente))
-            {
-                venta.Descuentos.Add($"Descuento Cliente Nuevo {DESCUENTO_CLIENTE_NUEVO * 100}%");
-                // Aquí aplicaríamos el descuento al total
-            }
         }
 
         public void DevolverVenta(Guid idVenta)
@@ -103,7 +91,7 @@ namespace ElectroHogar.Negocio
             }
         }
 
-        public VentaList ObtenerVenta(Guid idVenta)
+        public VentaList ObtenerVentaPorId(Guid idVenta)
         {
             try
             {
