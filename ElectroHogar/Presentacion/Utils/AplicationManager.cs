@@ -22,13 +22,11 @@ public class ApplicationManager
 
     public void ShowNewForm(Form newForm)
     {
-        // Si hay un formulario actual, lo ocultamos
         if (_currentForm != null && !_currentForm.IsDisposed)
         {
             _currentForm.Hide();
         }
 
-        // Configuramos el nuevo formulario
         _currentForm = newForm;
         _currentForm.FormClosed += (s, e) =>
         {
@@ -38,7 +36,6 @@ public class ApplicationManager
             }
         };
 
-        // Mostramos el nuevo formulario
         _currentForm.Show();
     }
 }

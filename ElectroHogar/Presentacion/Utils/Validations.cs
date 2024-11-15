@@ -6,7 +6,6 @@ namespace ElectroHogar.Presentacion.Utils
 {
     public static class Validations
     {
-        // Constantes de validación
         public const int MIN_LENGTH_USERNAME = 8;
         public const int MAX_LENGTH_USERNAME = 15;
         public const int MIN_LENGTH_PASSWORD = 8;
@@ -33,7 +32,6 @@ namespace ElectroHogar.Presentacion.Utils
             if (usuario.Length < MIN_LENGTH_USERNAME || usuario.Length > MAX_LENGTH_USERNAME)
                 return (false, ValidationMessages.USUARIO_LENGTH);
 
-            // Validar que solo contenga letras, números y guiones
             if (!Regex.IsMatch(usuario, @"^[a-zA-Z0-9_-]+$"))
                 return (false, ValidationMessages.USUARIO_INVALIDO);
 
@@ -48,11 +46,9 @@ namespace ElectroHogar.Presentacion.Utils
             if (password.Length < MIN_LENGTH_PASSWORD || password.Length > MAX_LENGTH_PASSWORD)
                 return (false, ValidationMessages.PASSWORD_LENGTH);
 
-            // Validar que contenga al menos una mayúscula
             if (!password.Any(char.IsUpper))
                 return (false, ValidationMessages.PASSWORD_REQUIRE_MAYUSCULA);
 
-            // Validar que contenga al menos un número
             if (!password.Any(char.IsDigit))
                 return (false, ValidationMessages.PASSWORD_REQUIRE_NUMERO);
 
@@ -80,7 +76,6 @@ namespace ElectroHogar.Presentacion.Utils
             if (string.IsNullOrEmpty(telefono?.Trim()))
                 return (false, "El teléfono es requerido");
 
-            // Permite números, guiones y espacios
             if (!Regex.IsMatch(telefono, @"^[\d\s-]+$"))
                 return (false, "El teléfono solo puede contener números, espacios y guiones");
 

@@ -34,7 +34,6 @@ namespace ElectroHogar.Presentacion.Forms
             var panelSuperior = FormHelper.CrearPanelSuperior(_config.Titulo);
             this.Controls.Add(panelSuperior);
 
-            // Panel de búsqueda
             var panelBusqueda = new Panel
             {
                 Width = FormHelper.ANCHO_FORM,
@@ -54,7 +53,6 @@ namespace ElectroHogar.Presentacion.Forms
 
             panelBusqueda.Controls.AddRange(new Control[] { lblBuscar, txtBusqueda });
 
-            // DataGridView
             dgvItems = new DataGridView
             {
                 Location = new Point(FormHelper.MARGEN, panelBusqueda.Bottom + 10),
@@ -69,7 +67,6 @@ namespace ElectroHogar.Presentacion.Forms
 
             ConfigurarColumnas();
 
-            // Solo agregamos el evento si hay acciones configuradas
             if (_config.Acciones.Any())
             {
                 dgvItems.CellClick += DgvItems_CellClick;

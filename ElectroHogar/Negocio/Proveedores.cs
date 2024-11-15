@@ -96,16 +96,5 @@ namespace ElectroHogar.Negocio
             if (!proveedor.Cuit.All(char.IsDigit) || proveedor.Cuit.Length != 11)
                 throw new Exception("El CUIT debe contener 11 dígitos numéricos");
         }
-
-        // TODO: Implementar cuando esté la clase Productos
-        public List<CategoriaProducto> ObtenerCategoriasProveedor(Guid idProveedor)
-        {
-            // Este método se implementará cuando tengamos la clase Productos
-            // Deberá:
-            // 1. Obtener todos los productos
-            // 2. Filtrar por el proveedor
-            // 3. Obtener las categorías únicas de esos productos
-            throw new NotImplementedException("Pendiente de implementación con la clase Productos");
-        }
     }
 }

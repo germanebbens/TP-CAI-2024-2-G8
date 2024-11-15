@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ElectroHogar.Datos;
@@ -49,7 +48,7 @@ namespace ElectroHogar.Negocio
             {
                 var nuevoCliente = new AddCliente
                 {
-                    IdUsuario = Guid.NewGuid(), // Este ID debería venir del usuario logueado
+                    IdUsuario = Guid.NewGuid(),
                     Nombre = nombre,
                     Apellido = apellido,
                     Dni = dni,
@@ -57,7 +56,7 @@ namespace ElectroHogar.Negocio
                     Telefono = telefono,
                     Email = email,
                     FechaNacimiento = fechaNacimiento,
-                    Host = "Grupo X" // Según el TP, debe ser "Grupo X"
+                    Host = "Grupo 8"
                 };
 
                 ValidarDatosBasicos(nuevoCliente);

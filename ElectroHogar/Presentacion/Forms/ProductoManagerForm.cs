@@ -59,7 +59,6 @@ namespace ElectroHogar.Presentacion.Forms
 
             int currentY = 10;
 
-            // Panel de proveedor seleccionado
             var lblProveedorTitulo = FormHelper.CrearLabel("Proveedor:");
             lblProveedorTitulo.Location = new Point(FormHelper.MARGEN, currentY);
             currentY = lblProveedorTitulo.Bottom + 5;
@@ -79,7 +78,6 @@ namespace ElectroHogar.Presentacion.Forms
             btnSeleccionarProveedor.Click += (s, e) => SeleccionarProveedor();
             currentY = btnSeleccionarProveedor.Bottom + 20;
 
-            // Campos del producto
             var txtNombre = FormHelper.CrearCampoTexto("Nombre del Producto:", "txtNombre", ref currentY, panel);
 
             var lblCategoria = FormHelper.CrearLabel("Categoría:");

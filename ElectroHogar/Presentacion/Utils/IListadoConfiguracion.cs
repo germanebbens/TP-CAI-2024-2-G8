@@ -206,7 +206,6 @@ namespace ElectroHogar.Presentacion.Utils
                     var proveedor = _service.ObtenerProveedorPorId(proveedorId);
                     _onSeleccion?.Invoke(proveedor);
                 
-                    // Obtener el formulario que contiene la fila y cerrarlo
                     var form = row.DataGridView.FindForm();
                     if (form != null)
                     {
@@ -327,12 +326,10 @@ namespace ElectroHogar.Presentacion.Utils
                     {
                         var clienteActualizado = _service.ObtenerClientePorId(clienteId);
                     
-                        // Actualizar los valores en la fila
                         row.Cells["Direccion"].Value = clienteActualizado.Direccion;
                         row.Cells["Telefono"].Value = clienteActualizado.Telefono;
                         row.Cells["Email"].Value = clienteActualizado.Email;
                     
-                        // Actualizar el objeto en la lista original
                         var gridView = row.DataGridView;
                         var items = (List<ClienteList>)gridView.Tag;
                         var index = items.FindIndex(c => c.Id == clienteId);

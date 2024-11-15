@@ -32,7 +32,6 @@ namespace ElectroHogar.Presentacion.Forms
             var panelSuperior = FormHelper.CrearPanelSuperior("Gestión de Proveedores");
             this.Controls.Add(panelSuperior);
 
-            // Botón Ver Proveedores Activos
             var btnProveedoresActivos = FormHelper.CrearBotonPrimario("Ver Proveedores Activos");
             btnProveedoresActivos.Location = new Point(FormHelper.MARGEN, panelSuperior.Bottom + 20);
             btnProveedoresActivos.Click += (s, e) => {
@@ -65,12 +64,10 @@ namespace ElectroHogar.Presentacion.Forms
                 Padding = new Padding(FormHelper.MARGEN)
             };
 
-            // Header del acordeón
             var btnAcordeon = FormHelper.CrearBotonPrimario("+ Agregar Nuevo Proveedor", FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 2));
             btnAcordeon.Location = new Point(FormHelper.MARGEN, 10);
             btnAcordeon.Click += (s, e) => ToggleAcordeon();
 
-            // Contenido del acordeón
             var panelContenido = new Panel
             {
                 Width = FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 2),
@@ -81,14 +78,12 @@ namespace ElectroHogar.Presentacion.Forms
 
             int currentY = 10;
 
-            // Campos del formulario
             var txtNombre = FormHelper.CrearCampoTexto("Nombre:", "txtNombre", ref currentY, panelContenido);
             var txtApellido = FormHelper.CrearCampoTexto("Apellido:", "txtApellido", ref currentY, panelContenido);
             var txtEmail = FormHelper.CrearCampoTexto("Email:", "txtEmail", ref currentY, panelContenido);
             var txtCuit = FormHelper.CrearCampoTexto("CUIT:", "txtCuit", ref currentY, panelContenido);
 
 
-            // Botón guardar
             var btnGuardar = FormHelper.CrearBotonPrimario("Guardar Proveedor", FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 3));
             btnGuardar.Location = new Point(FormHelper.MARGEN, currentY + 20);
             btnGuardar.Click += (s, e) => GuardarProveedor();

@@ -71,7 +71,6 @@ namespace ElectroHogar.Negocio
 
         private void AplicarDescuentos(VentaCompuesta venta)
         {
-            // Descuento por Electro Hogar
             var productosElectroHogar = venta.Items
                 .Where(i => i.Categoria == Categoria.ElectroHogar)
                 .ToList();

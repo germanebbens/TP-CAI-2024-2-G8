@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio;
@@ -38,7 +37,6 @@ namespace ElectroHogar.Presentacion.Forms
 
             int currentY = 10;
 
-            // Campos no editables
             var txtId = FormHelper.CrearCampoTexto("ID:", "txtId", ref currentY, panel);
             txtId.ReadOnly = true;
             txtId.Text = _cliente.Id.ToString();
@@ -47,7 +45,6 @@ namespace ElectroHogar.Presentacion.Forms
             txtNombre.ReadOnly = true;
             txtNombre.Text = $"{_cliente.Nombre} {_cliente.Apellido}";
 
-            // Campos editables
             var txtDireccion = FormHelper.CrearCampoTexto("Dirección:", "txtDireccion", ref currentY, panel);
             txtDireccion.Text = _cliente.Direccion;
 
@@ -82,26 +79,15 @@ namespace ElectroHogar.Presentacion.Forms
                 var txtDireccion = (TextBox)this.Controls[0].Controls["txtDireccion"];
                 var txtTelefono = (TextBox)this.Controls[0].Controls["txtTelefono"];
                 var txtEmail = (TextBox)this.Controls[0].Controls["txtEmail"];
-
                 _clientesService.ModificarCliente(
                     _cliente.Id,
                     txtDireccion.Text.Trim(),
                     txtTelefono.Text.Trim(),
                     txtEmail.Text.Trim()
                 );
-
                 FormHelper.MostrarEstado(lblEstado, "Cliente actualizado exitosamente", false);
                 this.DialogResult = DialogResult.OK;
-
-                // Eliminar el Task.Delay y usar un Timer para el cierre diferido
-                var timer = new System.Windows.Forms.Timer();
-                timer.Interval = 1000;
-                timer.Tick += (s, e) =>
-                {
-                    timer.Stop();
-                    this.Close();
-                };
-                timer.Start();
+                this.Close();
             }
             catch (Exception ex)
             {

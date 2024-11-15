@@ -73,16 +73,13 @@ namespace ElectroHogar.Negocio
 
             try
             {
-                // Verificar si existe una clave temporal
                 var (claveTemporal, userId) = _clavesTemporalesDB.ObtenerClaveTemporal(usuario);
 
                 if (!string.IsNullOrEmpty(claveTemporal) && claveTemporal == password && !string.IsNullOrEmpty(userId))
                 {
-                    // Si la clave temporal es correcta, guardamos el ID y mandamos a cambiar contraseña
                     return LoginResult.RequiereCambioContraseña();
                 }
 
-                // Si no hay clave temporal o no coincide, intentar login normal
                 _usuarioLogueadoId = _usuarioService.Login(usuario, password);
                 ReiniciarIntentos(usuario);
                 return ObtenerPerfilUsuario();
@@ -177,12 +174,9 @@ namespace ElectroHogar.Negocio
                     ContraseñaNueva = passwordNueva
                 };
 
-                // Verificar si existe una clave temporal para este usuario
                 var (claveTemporal, userId) = _clavesTemporalesDB.ObtenerClaveTemporal(username);
 
                 _usuarioService.ActivarUsuario(username: username);
-
-                // Intentar cambiar la contraseña
                 _usuarioService.CambiarContraseña(patchUser);
 
                 return true;

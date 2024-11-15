@@ -153,7 +153,6 @@ namespace ElectroHogar.Presentacion.Forms
                 {
                     var row = dgvVentas.Rows[e.RowIndex];
 
-                    // Si la fila ya está deshabilitada, no hacer nada
                     if (row.Tag != null && row.Tag.ToString() == "Deshabilitado")
                         return;
 
@@ -165,10 +164,8 @@ namespace ElectroHogar.Presentacion.Forms
                             var ventaId = Guid.Parse(row.Cells["Id"].Value.ToString());
                             _ventasService.DevolverVenta(ventaId);
 
-                            // Marcar la fila como deshabilitada
                             row.Tag = "Deshabilitado";
 
-                            // Aplicar estilo de deshabilitado
                             var style = new DataGridViewCellStyle
                             {
                                 BackColor = Color.LightGray,

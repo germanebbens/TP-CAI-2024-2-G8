@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using ElectroHogar.Datos;
 using ElectroHogar.Persistencia;
-using ElectroHogar.Presentacion.Utils;
 
 namespace ElectroHogar.Negocio
 {
@@ -12,6 +12,7 @@ namespace ElectroHogar.Negocio
         private readonly ProductosWS _productosWS;
         private readonly Proveedores _proveedoresService;
         private const double PORCENTAJE_STOCK_CRITICO = 0.25; // 25%
+        private const int STOCK_MAXIMO_NORMAL = 100;
 
         public Productos()
         {
@@ -50,7 +51,6 @@ namespace ElectroHogar.Negocio
         {
             try
             {
-                // Validar que el proveedor exista y esté activo
                 var proveedor = _proveedoresService.ObtenerProveedorPorId(idProveedor);
                 if (proveedor == null)
                     throw new Exception("El proveedor especificado no existe");
@@ -162,9 +162,8 @@ namespace ElectroHogar.Negocio
 
         private bool EsStockCritico(int stockActual)
         {
-            // Asumimos que 100 es el stock máximo normal para un producto
-            // Esto podría ajustarse según la lógica de negocio específica
-            const int STOCK_MAXIMO_NORMAL = 100;
+            // Se asume que X es el stock máximo normal para un producto
+            // Esto podría ajustarse según la lógica de negocio 
             return stockActual <= (STOCK_MAXIMO_NORMAL * PORCENTAJE_STOCK_CRITICO);
         }
     }

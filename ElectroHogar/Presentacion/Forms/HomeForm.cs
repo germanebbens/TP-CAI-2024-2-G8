@@ -29,17 +29,14 @@ namespace ElectroHogar.Presentacion.Forms
             this.Text = $"ElectroHogar - {_perfil}";
             this.ClientSize = new Size(ANCHO_FORM, 0); // initial height 0
 
-            // Panel superior con título
             var panelSuperior = FormHelper.CrearPanelSuperior("ElectroHogar");
             this.Controls.Add(panelSuperior);
 
-            // Label de bienvenida
             var lblBienvenida = FormHelper.CrearLabel($"Bienvenido {_nombreUsuario} - {_perfil}");
             lblBienvenida.Location = new Point(MARGEN, panelSuperior.Bottom + 20);
             lblBienvenida.Font = new Font(lblBienvenida.Font, FontStyle.Bold);
             this.Controls.Add(lblBienvenida);
 
-            // Crear botones y ajustar altura del form
             CrearBotonesModulos(lblBienvenida.Bottom + 20);
         }
 
@@ -48,7 +45,6 @@ namespace ElectroHogar.Presentacion.Forms
             var modulos = Perfiles.ObtenerModulos(_perfil);
             var currentY = startY;
 
-            // Crear botones de módulos
             foreach (var modulo in modulos)
             {
                 var btn = FormHelper.CrearBotonPrimario(modulo.Nombre, ANCHO_FORM - (MARGEN * 2));
@@ -58,14 +54,12 @@ namespace ElectroHogar.Presentacion.Forms
                 currentY += btn.Height + ESPACIO_ENTRE_BOTONES;
             }
 
-            // Botón de cerrar sesión
             var btnCerrarSesion = FormHelper.CrearBotonPrimario("Cerrar Sesión", ANCHO_FORM - (MARGEN * 2));
             btnCerrarSesion.Location = new Point(MARGEN, currentY + ESPACIO_ENTRE_BOTONES);
             btnCerrarSesion.BackColor = Color.FromArgb(192, 0, 0);
             btnCerrarSesion.Click += (s, e) => CerrarSesion();
             this.Controls.Add(btnCerrarSesion);
 
-            // Ajustar altura del formulario automáticamente
             this.ClientSize = new Size(
                 ANCHO_FORM,
                 btnCerrarSesion.Bottom + MARGEN
@@ -115,7 +109,7 @@ namespace ElectroHogar.Presentacion.Forms
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 var loginForm = new LoginForm();
-                LoginNegocio.Reset(); //reset singleton class login negocio
+                LoginNegocio.Reset(); //reset singleton class -> login negocio
                 ApplicationManager.Instance.ShowNewForm(loginForm);
                 this.Close();
             }

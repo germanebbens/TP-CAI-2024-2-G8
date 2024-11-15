@@ -179,7 +179,6 @@ namespace ElectroHogar.Negocio
 
         private void ValidarPerfil(int perfil)
         {
-            // Only allow to create salespeople and supervisors
             if (perfil != (int)PerfilUsuario.Vendedor && perfil != (int)PerfilUsuario.Supervisor)
                 throw new Exception("Solo se pueden crear usuarios con perfil Vendedor o Supervisor");
         }

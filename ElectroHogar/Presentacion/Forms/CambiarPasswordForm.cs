@@ -21,7 +21,6 @@ namespace ElectroHogar.Presentacion.Forms
             _username = username;
             _esClaveTemporal = esClaveTemporal;
 
-            // Inicializar label de estado
             lblEstado = FormHelper.CrearLabelEstado();
             lblEstado.Location = new Point(50, btnCancelar.Bottom + 20);
             this.Controls.Add(lblEstado);
@@ -35,12 +34,10 @@ namespace ElectroHogar.Presentacion.Forms
             this.Text = "ElectroHogar - Cambiar Contraseña";
             this.ClientSize = new Size(FormHelper.ANCHO_FORM, 450);
 
-            // Configurar controles
             FormHelper.ConfigurarTextBoxPassword(txtPasswordActual);
             FormHelper.ConfigurarTextBoxPassword(txtPasswordNueva);
             FormHelper.ConfigurarTextBoxPassword(txtConfirmarPassword);
 
-            // Aplicar estilos a los botones
             btnCambiar.BackColor = FormHelper.ColorPrimario;
             btnCambiar.FlatStyle = FlatStyle.Flat;
             btnCambiar.Font = new Font(FormHelper.FuenteNormal, FontStyle.Bold);
@@ -53,7 +50,6 @@ namespace ElectroHogar.Presentacion.Forms
             btnCancelar.ForeColor = FormHelper.ColorPrimario;
             btnCancelar.Size = new Size(300, 35);
 
-            // Si es clave temporal, mostramos un mensaje especial
             if (_esClaveTemporal)
             {
                 labelTitulo.Text = "Debe cambiar su contraseña temporal";

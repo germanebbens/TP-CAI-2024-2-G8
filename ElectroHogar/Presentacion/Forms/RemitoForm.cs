@@ -1,7 +1,6 @@
 ﻿using ElectroHogar.Datos;
 using ElectroHogar.Presentacion.Utils;
 using System;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -24,7 +23,6 @@ namespace ElectroHogar.Presentacion.Forms
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            // Panel principal
             var panel = new Panel
             {
                 AutoScroll = true,
@@ -32,7 +30,6 @@ namespace ElectroHogar.Presentacion.Forms
                 Padding = new Padding(20)
             };
 
-            // Título
             var lblTitulo = new Label
             {
                 Text = "ElectroHogar",
@@ -41,7 +38,6 @@ namespace ElectroHogar.Presentacion.Forms
                 AutoSize = true
             };
 
-            // Fecha
             var lblFecha = new Label
             {
                 Text = $"Fecha: {DateTime.Now:dd/MM/yyyy HH:mm}",
@@ -49,7 +45,6 @@ namespace ElectroHogar.Presentacion.Forms
                 AutoSize = true
             };
 
-            // Datos del cliente
             var lblClienteTitulo = new Label
             {
                 Text = "Datos del Cliente:",
@@ -68,7 +63,6 @@ namespace ElectroHogar.Presentacion.Forms
                 AutoSize = true
             };
 
-            // Grilla
             var lblDetalle = new Label
             {
                 Text = "Detalle:",
@@ -137,7 +131,6 @@ namespace ElectroHogar.Presentacion.Forms
 
             dgvProductos.DataSource = venta.Items;
 
-            // Descuentos
             var lblPromociones = new Label
             {
                 Text = "Promociones:",
@@ -159,7 +152,6 @@ namespace ElectroHogar.Presentacion.Forms
                 lstDescuentos.Items.Add(descuento);
             }
 
-            // Total
             var lblSubtotal = new Label
             {
                 Text = $"Subtotal: ${venta.Items.Sum(i => i.Subtotal):N2}",
@@ -176,7 +168,6 @@ namespace ElectroHogar.Presentacion.Forms
                 AutoSize = true
             };
 
-            // Botón cerrar
             var btnCerrar = FormHelper.CrearBotonPrimario("CERRAR", 100);
             btnCerrar.Location = new Point(350, lblTotal.Bottom + 20);
             btnCerrar.Click += (s, e) => this.Close();
