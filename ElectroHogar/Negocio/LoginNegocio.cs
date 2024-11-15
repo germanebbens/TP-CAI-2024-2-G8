@@ -14,7 +14,7 @@ namespace ElectroHogar.Negocio
         private readonly ClavesTemporalesDB _clavesTemporalesDB;
         private readonly Usuarios _usuarioService;
         private readonly LoginDB _loginDB;
-        private string _usuarioLogueadoId;
+        public string _usuarioLogueadoId;
         private readonly int _maxIntentos;
 
         private LoginNegocio()  // private constructor!

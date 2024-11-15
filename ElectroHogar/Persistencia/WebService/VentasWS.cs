@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using ElectroHogar.Datos;
 using ElectroHogar.Persistencia.Utils;
+using ElectroHogar.Negocio;
 
 namespace ElectroHogar.Persistencia
 {
     public class VentasWS : BaseWS
     {
-        public readonly string adminId;
+        private readonly LoginNegocio _loginNegocio;
+        public readonly string usuarioLogueadoId;
 
         public VentasWS() : base()
         {
-            adminId = _adminId;
+            _loginNegocio = LoginNegocio.Instance;
+            usuarioLogueadoId = _loginNegocio._usuarioLogueadoId;
         }
 
         public void AgregarVenta(AddVenta venta)

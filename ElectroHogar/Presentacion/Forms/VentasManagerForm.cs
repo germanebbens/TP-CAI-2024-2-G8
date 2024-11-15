@@ -20,9 +20,11 @@ namespace ElectroHogar.Presentacion.Forms
         private readonly Panel panelResumen;
         private ClienteList _clienteSeleccionado;
         private List<ItemVenta> _items = new List<ItemVenta>();
+        private readonly int ANCHO;
 
         public VentasManagerForm()
         {
+            ANCHO = FormHelper.ANCHO_FORM + 50;
             InitializeComponent();
             _ventasService = new Ventas();
             lblEstado = FormHelper.CrearLabelEstado();
@@ -36,7 +38,7 @@ namespace ElectroHogar.Presentacion.Forms
         {
             FormHelper.ConfigurarFormularioBase(this);
             this.Text = "ElectroHogar - Nueva Venta";
-            this.ClientSize = new Size(FormHelper.ANCHO_FORM + 20, 800);
+            this.ClientSize = new Size(ANCHO, 800);
             this.AutoScroll = true;
 
             var panelSuperior = FormHelper.CrearPanelSuperior("Nueva Venta");
@@ -46,14 +48,12 @@ namespace ElectroHogar.Presentacion.Forms
             btnVolver.Location = new Point(FormHelper.MARGEN, panelSuperior.Bottom + 10);
             btnVolver.Click += (s, e) => this.Close();
 
-            lblEstado.Location = new Point(FormHelper.MARGEN, btnVolver.Bottom + 10);
-            panelCliente.Location = new Point(0, lblEstado.Bottom + 10);
+            panelCliente.Location = new Point(0, btnVolver.Bottom + 10);
             panelProductos.Location = new Point(0, panelCliente.Bottom + 40);
             panelResumen.Location = new Point(0, panelProductos.Bottom + 10);
 
             this.Controls.AddRange(new Control[] {
                 btnVolver,
-                lblEstado,
                 panelCliente,
                 panelProductos,
                 panelResumen
@@ -65,7 +65,7 @@ namespace ElectroHogar.Presentacion.Forms
             var panel = new Panel
             {
                 Name = "panelCliente",
-                Width = FormHelper.ANCHO_FORM,
+                Width = ANCHO,
                 AutoSize = true,
                 Padding = new Padding(FormHelper.MARGEN)
             };
@@ -85,7 +85,7 @@ namespace ElectroHogar.Presentacion.Forms
             var panelDatos = new Panel
             {
                 Name = "panelDatosCliente",
-                Width = FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 2),
+                Width = ANCHO - (FormHelper.MARGEN * 2),
                 Location = new Point(FormHelper.MARGEN, btnSeleccionarCliente.Bottom + 10),
                 AutoSize = true
             };
@@ -151,6 +151,7 @@ namespace ElectroHogar.Presentacion.Forms
             if (formClientes.ShowDialog() == DialogResult.OK)
             {
                 ActualizarDatosCliente();
+                ActualizarResumen();
             }
         }
 
@@ -177,7 +178,7 @@ namespace ElectroHogar.Presentacion.Forms
         {
             var panel = new Panel
             {
-                Width = FormHelper.ANCHO_FORM,
+                Width = ANCHO,
                 Height = 350
             };
 
@@ -263,40 +264,57 @@ namespace ElectroHogar.Presentacion.Forms
         {
             var panel = new Panel
             {
-                Width = FormHelper.ANCHO_FORM,
+                Width = ANCHO,
                 AutoSize = true,
                 Padding = new Padding(FormHelper.MARGEN)
             };
 
-            // Lista de descuentos
-            var lblDescuentos = FormHelper.CrearLabel("Descuentos Aplicables:");
-            lblDescuentos.Location = new Point(FormHelper.MARGEN, 10); // Cambiamos esto
+            // Subtotal
+            var lblSubtotal = FormHelper.CrearLabel("Subtotal:");
+            lblSubtotal.Font = new Font(lblSubtotal.Font, FontStyle.Bold);
+            lblSubtotal.Location = new Point(FormHelper.MARGEN, 10);
+
+            var lblSubtotalValue = FormHelper.CrearLabel("$0.00");
+            lblSubtotalValue.Name = "lblSubtotal";
+            lblSubtotalValue.Location = new Point(lblSubtotal.Right + FormHelper.MARGEN, 10);
+
+            // Discounts
+            var lblDescuentos = FormHelper.CrearLabel("Descuentos:");
             lblDescuentos.Font = new Font(lblDescuentos.Font, FontStyle.Bold);
+            lblDescuentos.Location = new Point(FormHelper.MARGEN, lblSubtotal.Bottom + 10);
 
             var lstDescuentos = new ListBox
             {
                 Name = "lstDescuentos",
                 Location = new Point(FormHelper.MARGEN, lblDescuentos.Bottom + 5),
-                Width = FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 2),
+                Width = ANCHO - (FormHelper.MARGEN * 2),
                 Height = 60
             };
 
             // Total
-            var lblTotal = new Label
-            {
-                Name = "lblTotal",
-                Text = "Total: $0,00",
-                Location = new Point(FormHelper.MARGEN, lstDescuentos.Bottom + 10),
-                AutoSize = true,
-                Font = new Font(lblDescuentos.Font, FontStyle.Bold)
-            };
+            var lblTotal = FormHelper.CrearLabel("Total:");
+            lblTotal.Font = new Font(lblTotal.Font, FontStyle.Bold);
+            lblTotal.Location = new Point(FormHelper.MARGEN, lstDescuentos.Bottom + 10);
 
-            // Botón confirmar venta
-            var btnConfirmar = FormHelper.CrearBotonPrimario("Confirmar Venta", FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 2));
-            btnConfirmar.Location = new Point(FormHelper.MARGEN, lblTotal.Bottom + 20);
+            var lblTotalValue = FormHelper.CrearLabel("$0.00");
+            lblTotalValue.Name = "lblTotal";
+            lblTotalValue.Location = new Point(lblTotal.Right + FormHelper.MARGEN, lblTotal.Top);
+
+            // Confirm Button
+            var btnConfirmar = FormHelper.CrearBotonPrimario("Confirmar Venta", ANCHO - (FormHelper.MARGEN * 2));
+            btnConfirmar.Location = new Point(FormHelper.MARGEN, lblTotalValue.Bottom + 20);
             btnConfirmar.Click += (s, e) => ConfirmarVenta();
 
-            panel.Controls.AddRange(new Control[] { lblDescuentos, lstDescuentos, lblTotal, btnConfirmar });
+            // Estado Label
+            lblEstado.Location = new Point(FormHelper.MARGEN, btnConfirmar.Bottom + FormHelper.MARGEN);
+
+            panel.Controls.AddRange(new Control[] {
+                lblSubtotal, lblSubtotalValue,
+                lblDescuentos, lstDescuentos,
+                lblTotal, lblTotalValue,
+                btnConfirmar, lblEstado
+            });
+
             return panel;
         }
 
@@ -376,34 +394,52 @@ namespace ElectroHogar.Presentacion.Forms
         private void ActualizarResumen()
         {
             var lstDescuentos = (ListBox)panelResumen.Controls["lstDescuentos"];
+            var lblSubtotal = (Label)panelResumen.Controls["lblSubtotal"];
+            var lblDescuentos = (Label)panelResumen.Controls["lblDescuentos"];
             var lblTotal = (Label)panelResumen.Controls["lblTotal"];
 
-            // Calcular descuentos aplicables
+            // Calculate applicable discounts
             lstDescuentos.Items.Clear();
+            double totalDescuento = 0;
 
-            // Descuento Electro Hogar
+            // Electro Hogar Discount
             var montoElectroHogar = _items
                 .Where(i => i.Categoria == Categoria.ElectroHogar)
                 .Sum(i => i.Subtotal);
 
             if (montoElectroHogar > 100000)
             {
-                lstDescuentos.Items.Add("5% Descuento Electro Hogar");
+                var descuentoElectroHogar = montoElectroHogar * 0.05;
+                lstDescuentos.Items.Add($"5% Descuento Electro Hogar: ${descuentoElectroHogar:N2}");
+                totalDescuento += descuentoElectroHogar;
             }
 
-            // Descuento Cliente Nuevo
+            // New Customer Discount
             if (_clienteSeleccionado != null)
             {
                 var clientesService = new Clientes();
                 if (clientesService.EsClienteNuevo(_clienteSeleccionado.Id))
                 {
-                    lstDescuentos.Items.Add("5% Descuento Cliente Nuevo");
+                    var montoTotal = _items.Sum(i => i.Subtotal);
+                    var descuentoClienteNuevo = montoTotal * 0.05;
+                    lstDescuentos.Items.Add($"5% Descuento Cliente Nuevo: ${descuentoClienteNuevo:N2}");
+                    totalDescuento += descuentoClienteNuevo;
                 }
             }
 
-            // Calcular total
-            double total = _items.Sum(i => i.Subtotal);
-            lblTotal.Text = $"Total: ${total:N2}";
+            // Calculate final total
+            double subtotal = _items.Sum(i => i.Subtotal);
+            double total = subtotal - totalDescuento;
+
+            // Update the labels
+            if (lblSubtotal != null)
+                lblSubtotal.Text = $"Subtotal: ${subtotal:N2}";
+
+            if (lblDescuentos != null)
+                lblDescuentos.Text = $"Descuentos:";
+
+            if (lblTotal != null)
+                lblTotal.Text = $"Total: ${total:N2}";
         }
 
         private void ConfirmarVenta()
@@ -447,13 +483,11 @@ namespace ElectroHogar.Presentacion.Forms
             var lblDireccion = (Label)panelDatos.Controls["lblDireccion"];
             var lblTelefono = (Label)panelDatos.Controls["lblTelefono"];
             var lblEmail = (Label)panelDatos.Controls["lblEmail"];
-            var btnSeleccionar = panelDatos.Controls.OfType<Button>().First();
 
             lblClienteInfo.Text = "Ningún cliente seleccionado";
             lblDireccion.Text = "";
             lblTelefono.Text = "";
             lblEmail.Text = "";
-            btnSeleccionar.Text = "Seleccionar Cliente";
 
             ActualizarGridProductos();
             ActualizarResumen();

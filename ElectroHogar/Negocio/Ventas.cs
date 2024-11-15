@@ -22,11 +22,11 @@ namespace ElectroHogar.Negocio
             _clientesService = new Clientes();
         }
 
-        public List<Guid> RegistrarVenta(VentaCompuesta venta)
+        public void RegistrarVenta(VentaCompuesta venta)
         {
             try
             {
-                venta.IdUsuario = Guid.Parse(_ventasWS.adminId);
+                venta.IdUsuario = Guid.Parse(_ventasWS.usuarioLogueadoId);
                 ValidarVenta(venta);
                 var idsVentas = new List<Guid>();
 
@@ -43,12 +43,7 @@ namespace ElectroHogar.Negocio
                     };
 
                     _ventasWS.AgregarVenta(ventaIndividual);
-                    // Aquí deberíamos obtener el ID de la venta creada
-                    // pero el endpoint no lo devuelve, así que habría que
-                    // buscar por cliente las últimas ventas
                 }
-
-                return idsVentas;
             }
             catch (Exception ex)
             {

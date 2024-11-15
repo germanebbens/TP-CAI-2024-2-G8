@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ElectroHogar.Datos;
@@ -166,12 +167,12 @@ namespace ElectroHogar.Negocio
         {
             try
             {
-                var cliente = ObtenerClientePorId(idCliente);
-                if (cliente == null)
-                    throw new Exception("Cliente no encontrado");
+                Ventas ventas = new Ventas();
+                List<VentaList> ventasCliente = ventas.ObtenerVentasPorCliente(idCliente);
+                if (ventasCliente.Count == 0)
+                    return true;
 
-                // Consideramos cliente nuevo si se dio de alta en los últimos 30 días
-                return (DateTime.Now - cliente.FechaAlta).TotalDays <= 30;
+                return false;
             }
             catch (Exception ex)
             {
