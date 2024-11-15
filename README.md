@@ -1,13 +1,13 @@
-# Trabajo Práctico - Construcción de Aplicaciones Informáticas
-## Facultad de Ciencias Económicas - Universidad de Buenos Aires
-### Información General
+# Trabajo Prï¿½ctico - Construcciï¿½n de Aplicaciones Informï¿½ticas
+## Facultad de Ciencias Econï¿½micas - Universidad de Buenos Aires
+### Informaciï¿½n General
 
-Asignatura: Construcción de Aplicaciones Informáticas
+Asignatura: Construcciï¿½n de Aplicaciones Informï¿½ticas
 Cuatrimestre: 2do Cuatrimestre de 2024
 
 ### Contexto del Proyecto
-La empresa EletroHogar SA, dedicada a la compra-venta de artículos del hogar, ha lanzado una licitación para desarrollar un software que permita administrar su stock y operaciones. La empresa de software ha sido la adjudicataria de este proyecto.
-Actualmente, el proceso de gestión es burocrático y parcialmente manual, con dificultades para llevar un adecuado control del stock, las ventas y la información de clientes y proveedores.
+La empresa EletroHogar SA, dedicada a la compra-venta de artï¿½culos del hogar, ha lanzado una licitaciï¿½n para desarrollar un software que permita administrar su stock y operaciones. La empresa de software ha sido la adjudicataria de este proyecto.
+Actualmente, el proceso de gestiï¿½n es burocrï¿½tico y parcialmente manual, con dificultades para llevar un adecuado control del stock, las ventas y la informaciï¿½n de clientes y proveedores.
 
 ### Diagramas
 #### Caso de uso Login
@@ -26,63 +26,63 @@ El proyecto busca automatizar y modernizar los procesos clave de la empresa, inc
 
 #### Usuarios:
 
-- Registro y gestión de usuarios con perfiles de Administrador, Supervisor y Vendedor.
-- Control de intentos de inicio de sesión y bloqueo de usuarios.
-- Manejo de contraseñas con políticas de seguridad.
+- Registro y gestiï¿½n de usuarios con perfiles de Administrador, Supervisor y Vendedor.
+- Control de intentos de inicio de sesiï¿½n y bloqueo de usuarios.
+- Manejo de contraseï¿½as con polï¿½ticas de seguridad.
 
 
 #### Proveedores:
 
-- Registro y gestión de proveedores.
-- Categorización de productos por proveedor.
+- Registro y gestiï¿½n de proveedores.
+- Categorizaciï¿½n de productos por proveedor.
 
 
 #### Productos:
 
-- Registro y gestión de productos.
-- Alertas de stock crítico para supervisores y administradores.
+- Registro y gestiï¿½n de productos.
+- Alertas de stock crï¿½tico para supervisores y administradores.
 
 
 #### Ventas:
 
-- Registro de ventas con aplicación de descuentos.
-- Devolución de ventas.
-- Generación de remitos valorizados.
+- Registro de ventas con aplicaciï¿½n de descuentos.
+- Devoluciï¿½n de ventas.
+- Generaciï¿½n de remitos valorizados.
 
 
 #### Clientes:
 
-- Registro y modificación de clientes.
+- Registro y modificaciï¿½n de clientes.
 
 
 #### Reportes:
 
-- Reporte de productos con stock crítico.
+- Reporte de productos con stock crï¿½tico.
 - Reporte de ventas por vendedor.
-- Reporte de productos más vendidos por categoría.
+- Reporte de productos mï¿½s vendidos por categorï¿½a.
 
 
 
-## Tecnologías Utilizadas
+## Tecnologï¿½as Utilizadas
 
 - Framework: .NET Framework 4.8
-- Lenguaje de Programación: C#
+- Lenguaje de Programaciï¿½n: C#
 - Base de Datos: Archivos JSON
 - Controles de Windows Forms
 
 ### Estructura del Proyecto
 El proyecto se divide en las siguientes capas:
 
-- Datos: Clases que representan las entidades del sistema (Usuario, Proveedor, Producto, Venta, Cliente), en este nivel es donde iría la interacción con la base de datos.
-- Negocio: Lógica de negocio para la gestión de usuarios, proveedores, productos, ventas y clientes.
-- Persistencia: Clases que manejan la interacción con la base de datos (archivos JSON), y con el webservice (WS).
-- Presentación: Formularios y controles de la interfaz de usuario.
+- Datos: Clases que representan las entidades del sistema (Usuario, Proveedor, Producto, Venta, Cliente), en este nivel es donde irï¿½a la interacciï¿½n con la base de datos.
+- Negocio: Lï¿½gica de negocio para la gestiï¿½n de usuarios, proveedores, productos, ventas y clientes.
+- Persistencia: Clases que manejan la interacciï¿½n con la base de datos (archivos JSON), y con el webservice (WS).
+- Presentaciï¿½n: Formularios y controles de la interfaz de usuario.
 
-Las distintas capas tienen clases y métodos de soporte, como validaciones y helpers de formularios.
+Las distintas capas tienen clases y mï¿½todos de soporte, como validaciones y helpers de formularios.
 
-### Instrucciones de Ejecución
+### Instrucciones de Ejecuciï¿½n
 
-1. Asegúrate de tener instalado el .NET Framework 4.8 o superior en tu sistema.
+1. Asegï¿½rate de tener instalado el .NET Framework 4.8 o superior en tu sistema.
 2. Clona el repositorio del proyecto.
-3. Abre la solución en Visual Studio.
+3. Abre la soluciï¿½n en Visual Studio.
 4. Compila y ejecuta el proyecto.
