@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio;
-using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Presentacion.Utils;
 
 namespace ElectroHogar.Presentacion.Forms
@@ -80,6 +79,9 @@ namespace ElectroHogar.Presentacion.Forms
             {
                 case "UsuariosForm":
                     formulario = new UserManagerForm();
+                    break;
+                case "ProveedoresForm":
+                    formulario = new ProveedorManagerForm();
                     break;
             }
 

@@ -79,7 +79,6 @@ namespace ElectroHogar.Negocio
                 if (!string.IsNullOrEmpty(claveTemporal) && claveTemporal == password && !string.IsNullOrEmpty(userId))
                 {
                     // Si la clave temporal es correcta, guardamos el ID y mandamos a cambiar contraseña
-                    _usuarioLogueadoId = userId;
                     return LoginResult.RequiereCambioContraseña();
                 }
 

@@ -1,10 +1,7 @@
-﻿using ElectroHogar.Datos;
-using ElectroHogar.Negocio;
+﻿using ElectroHogar.Negocio;
 using ElectroHogar.Presentacion.Utils;
 using System;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace ElectroHogar.Presentacion.Forms
@@ -15,7 +12,6 @@ namespace ElectroHogar.Presentacion.Forms
         private readonly Label lblEstado;
         private readonly Panel panelAltaProveedor;
         private bool acordeonAbierto = false;
-        private CheckedListBox lstCategorias;
 
         public ProveedorManagerForm()
         {
@@ -91,25 +87,6 @@ namespace ElectroHogar.Presentacion.Forms
             var txtEmail = FormHelper.CrearCampoTexto("Email:", "txtEmail", ref currentY, panelContenido);
             var txtCuit = FormHelper.CrearCampoTexto("CUIT:", "txtCuit", ref currentY, panelContenido);
 
-            // Lista de categorías
-            var lblCategorias = FormHelper.CrearLabel("Categorías:");
-            lblCategorias.Location = new Point(FormHelper.MARGEN, currentY);
-            currentY = lblCategorias.Bottom + 5;
-
-            lstCategorias = new CheckedListBox
-            {
-                Location = new Point(FormHelper.MARGEN, currentY),
-                Width = panelContenido.Width - (FormHelper.MARGEN * 2),
-                Height = 100
-            };
-
-            // Cargar categorías
-            foreach (CategoriaProducto categoria in Enum.GetValues(typeof(CategoriaProducto)))
-            {
-                lstCategorias.Items.Add(categoria.ToString(), false);
-            }
-
-            currentY = lstCategorias.Bottom + 10;
 
             // Botón guardar
             var btnGuardar = FormHelper.CrearBotonPrimario("Guardar Proveedor", FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 3));
@@ -117,8 +94,6 @@ namespace ElectroHogar.Presentacion.Forms
             btnGuardar.Click += (s, e) => GuardarProveedor();
 
             panelContenido.Controls.AddRange(new Control[] {
-            lblCategorias,
-            lstCategorias,
             btnGuardar
         });
 
@@ -149,17 +124,11 @@ namespace ElectroHogar.Presentacion.Forms
                 var email = ((TextBox)panelContenido.Controls["txtEmail"]).Text.Trim();
                 var cuit = ((TextBox)panelContenido.Controls["txtCuit"]).Text.Trim();
 
-                var categoriasSeleccionadas = lstCategorias.CheckedItems
-                    .Cast<string>()
-                    .Select(c => (CategoriaProducto)Enum.Parse(typeof(CategoriaProducto), c))
-                    .ToList();
-
                 _proveedorService.RegistrarProveedor(
                     nombre,
                     apellido,
                     email,
-                    cuit,
-                    categoriasSeleccionadas
+                    cuit
                 );
 
                 FormHelper.MostrarEstado(lblEstado, "Proveedor registrado exitosamente", false);
@@ -182,11 +151,6 @@ namespace ElectroHogar.Presentacion.Forms
                 {
                     textBox.Text = string.Empty;
                 }
-            }
-
-            for (int i = 0; i < lstCategorias.Items.Count; i++)
-            {
-                lstCategorias.SetItemChecked(i, false);
             }
         }
     }

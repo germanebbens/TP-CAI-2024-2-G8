@@ -63,11 +63,11 @@
     <Compile Include="Persistencia\WebService\ClientesWS.cs" />
     <Compile Include="Persistencia\WebService\ProductosWS.cs" />
     <Compile Include="Persistencia\WebService\ProveedoresWS.cs" />
-    <Compile Include="Presentacion\Forms\ActiveUsersForm .cs">
+    <Compile Include="Presentacion\Forms\BaseManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentacion\Forms\ActiveUsersForm .Designer.cs">
-      <DependentUpon>ActiveUsersForm .cs</DependentUpon>
+    <Compile Include="Presentacion\Forms\BaseManagerForm.Designer.cs">
+      <DependentUpon>BaseManagerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Forms\CambiarPasswordForm.cs">
       <SubType>Form</SubType>

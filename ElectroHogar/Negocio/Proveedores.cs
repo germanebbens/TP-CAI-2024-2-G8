@@ -10,15 +10,13 @@ namespace ElectroHogar.Negocio
     public class Proveedores
     {
         private readonly ProveedoresWS _proveedoresWS;
-        private readonly Dictionary<Guid, List<CategoriaProducto>> _categoriasPorProveedor;
 
         public Proveedores()
         {
             _proveedoresWS = new ProveedoresWS();
-            _categoriasPorProveedor = new Dictionary<Guid, List<CategoriaProducto>>();
         }
 
-        public List<ProveedorList> ObtenerProveedoresActivos()
+        public List<ProveedorList> ObtenerActivos()
         {
             try
             {
@@ -31,7 +29,7 @@ namespace ElectroHogar.Negocio
             }
         }
 
-        public void RegistrarProveedor(string nombre, string apellido, string email, string cuit, List<CategoriaProducto> categorias)
+        public void RegistrarProveedor(string nombre, string apellido, string email, string cuit)
         {
             try
             {
@@ -45,59 +43,11 @@ namespace ElectroHogar.Negocio
                 };
 
                 ValidarDatosBasicos(nuevoProveedor);
-                ValidarCategorias(categorias);
-
                 _proveedoresWS.AgregarProveedor(nuevoProveedor);
-
-                // Guardamos las categorías del proveedor nuevo
-                var proveedores = _proveedoresWS.ObtenerProveedores();
-                var proveedorCreado = proveedores.FirstOrDefault(p =>
-                    p.Cuit == nuevoProveedor.Cuit &&
-                    !p.FechaBaja.HasValue);
-
-                if (proveedorCreado != null)
-                {
-                    _categoriasPorProveedor[proveedorCreado.Id] = categorias;
-                }
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error al registrar proveedor: {ex.Message}");
-            }
-        }
-
-        public void ModificarProveedor(Guid idProveedor, string nombre, string apellido, string email, string cuit, List<CategoriaProducto> categorias)
-        {
-            try
-            {
-                // Verificar que el proveedor existe y está activo
-                var proveedorActual = ObtenerProveedoresActivos()
-                    .FirstOrDefault(p => p.Id == idProveedor);
-
-                if (proveedorActual == null)
-                    throw new Exception("El proveedor no existe o está inactivo");
-
-                var proveedorModificado = new PatchProveedor
-                {
-                    Id = idProveedor,
-                    IdUsuario = Guid.Parse(_proveedoresWS.AdminId),
-                    Nombre = nombre,
-                    Apellido = apellido,
-                    Email = email,
-                    Cuit = cuit
-                };
-
-                ValidarDatosBasicos(proveedorModificado);
-                ValidarCategorias(categorias);
-
-                _proveedoresWS.ModificarProveedor(proveedorModificado);
-
-                // Actualizar categorías
-                _categoriasPorProveedor[idProveedor] = categorias;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al modificar proveedor: {ex.Message}");
             }
         }
 
@@ -106,19 +56,11 @@ namespace ElectroHogar.Negocio
             try
             {
                 _proveedoresWS.BajaProveedor(idProveedor);
-                _categoriasPorProveedor.Remove(idProveedor);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error al dar de baja el proveedor: {ex.Message}");
             }
-        }
-
-        public List<CategoriaProducto> ObtenerCategoriasProveedor(Guid idProveedor)
-        {
-            return _categoriasPorProveedor.TryGetValue(idProveedor, out var categorias)
-                ? categorias
-                : new List<CategoriaProducto>();
         }
 
         public ProveedorList ObtenerProveedorPorId(Guid idProveedor)
@@ -155,25 +97,15 @@ namespace ElectroHogar.Negocio
                 throw new Exception("El CUIT debe contener 11 dígitos numéricos");
         }
 
-        private void ValidarCategorias(List<CategoriaProducto> categorias)
+        // TODO: Implementar cuando esté la clase Productos
+        public List<CategoriaProducto> ObtenerCategoriasProveedor(Guid idProveedor)
         {
-            if (categorias == null || !categorias.Any())
-                throw new Exception("Debe seleccionar al menos una categoría");
-
-            if (categorias.Count != categorias.Distinct().Count())
-                throw new Exception("No puede seleccionar la misma categoría más de una vez");
-        }
-
-        public static List<CategoriaProducto> ObtenerTodasLasCategorias()
-        {
-            return Enum.GetValues(typeof(CategoriaProducto))
-                .Cast<CategoriaProducto>()
-                .ToList();
-        }
-
-        public static string ObtenerDescripcionCategoria(CategoriaProducto categoria)
-        {
-            return categoria.ToString().Replace("_", " ");
+            // Este método se implementará cuando tengamos la clase Productos
+            // Deberá:
+            // 1. Obtener todos los productos
+            // 2. Filtrar por el proveedor
+            // 3. Obtener las categorías únicas de esos productos
+            throw new NotImplementedException("Pendiente de implementación con la clase Productos");
         }
     }
 }

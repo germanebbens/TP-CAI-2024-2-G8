@@ -94,7 +94,6 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void ConfigurarColumnas()
         {
-            // Primero las columnas de datos
             var columnas = _config.Columnas.Select(c => new DataGridViewTextBoxColumn
             {
                 Name = c.Nombre,
@@ -103,14 +102,14 @@ namespace ElectroHogar.Presentacion.Forms
                 Width = c.Ancho
             }).ToList<DataGridViewColumn>();
 
-            // Luego las columnas de acciones
             columnas.AddRange(_config.Acciones.Select(a => new DataGridViewButtonColumn
             {
                 Name = a.Nombre,
                 HeaderText = "Acción",
                 Text = a.Texto,
                 UseColumnTextForButtonValue = true,
-                Width = 85
+                Width = 85,
+                FlatStyle = FlatStyle.Flat
             }));
 
             dgvItems.Columns.AddRange(columnas.ToArray());
@@ -127,9 +126,11 @@ namespace ElectroHogar.Presentacion.Forms
             if (accion == null) return;
 
             var buttonCell = row.Cells[columnName] as DataGridViewButtonCell;
-            if (buttonCell?.Value?.ToString() == "Desactivado") return;
+            if (row.Tag != null && row.Tag.ToString() == "Deshabilitado")
+            {
+                return;
+            }
 
-            // Si la acción requiere confirmación
             if (accion.RequiereConfirmacion)
             {
                 var itemId = Guid.Parse(row.Cells["Id"].Value.ToString());
@@ -145,20 +146,36 @@ namespace ElectroHogar.Presentacion.Forms
 
             try
             {
-                // Ejecutar la acción
                 accion.Accion?.Invoke(row);
 
-                // Si es una acción de desactivar, actualizamos la UI
-                if (accion.Nombre == "Desactivar")
-                {
-                    buttonCell.Value = "Desactivado";
-                    buttonCell.Style.BackColor = Color.LightGray;
-                    buttonCell.Style.ForeColor = Color.DarkGray;
-                    row.DefaultCellStyle.BackColor = Color.LightGray;
-                    row.DefaultCellStyle.ForeColor = Color.DarkGray;
+                // Marcar la fila como deshabilitada usando el Tag
+                row.Tag = "Deshabilitado";
 
-                    FormHelper.MostrarEstado(lblEstado, $"{_config.NombreIdentificador} deshabilitado exitosamente", false);
+                // Deshabilitar la celda del botón
+                var buttonCell2 = row.Cells[columnName] as DataGridViewButtonCell;
+                if (buttonCell2 != null)
+                {
+                    // Cambiar el estilo de la celda
+                    var style = new DataGridViewCellStyle
+                    {
+                        BackColor = Color.LightGray,
+                        ForeColor = Color.DarkGray,
+                        SelectionBackColor = Color.LightGray,
+                        SelectionForeColor = Color.DarkGray
+                    };
+                    buttonCell2.Style = style;
                 }
+
+                // Aplicar estilo a toda la fila
+                row.DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    BackColor = Color.LightGray,
+                    ForeColor = Color.DarkGray,
+                    SelectionBackColor = Color.LightGray,
+                    SelectionForeColor = Color.DarkGray
+                };
+
+                FormHelper.MostrarEstado(lblEstado, $"{_config.NombreIdentificador} deshabilitado exitosamente", false);
             }
             catch (Exception ex)
             {
@@ -175,7 +192,6 @@ namespace ElectroHogar.Presentacion.Forms
         {
             try
             {
-                // Asumimos que el servicio tiene un método para obtener items
                 var method = _config.Service.GetType().GetMethod("ObtenerActivos");
                 if (method != null)
                 {

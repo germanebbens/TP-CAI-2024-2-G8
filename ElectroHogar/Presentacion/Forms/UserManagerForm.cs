@@ -33,12 +33,12 @@ namespace ElectroHogar.Presentacion.Forms
             var panelSuperior = FormHelper.CrearPanelSuperior("Gestión de Usuarios");
             this.Controls.Add(panelSuperior);
 
-            // Botón Ver Usuarios Activos
             var btnUsuariosActivos = FormHelper.CrearBotonPrimario("Ver Usuarios Activos");
             btnUsuariosActivos.Location = new Point(FormHelper.MARGEN, panelSuperior.Bottom + 20);
             btnUsuariosActivos.Click += (s, e) => {
-                var formUsuariosActivos = new ActiveUsersForm();
-                formUsuariosActivos.ShowDialog();
+                var configUsuarios = new UsuariosListadoConfig();
+                var formProveedores = new GenericListForm(configUsuarios);
+                formProveedores.ShowDialog();
             };
 
             var btnVolver = FormHelper.CrearBotonPrimario("Volver", 100);

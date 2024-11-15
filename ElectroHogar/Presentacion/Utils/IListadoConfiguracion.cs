@@ -1,6 +1,7 @@
 ﻿using ElectroHogar.Negocio;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ElectroHogar.Presentacion.Utils
@@ -52,7 +53,27 @@ namespace ElectroHogar.Presentacion.Utils
                 PropiedadDatos = "Id",
                 Ancho = 100
             },
-            // ... resto de columnas
+            new ColumnaConfig
+            {
+                Nombre = "NombreUsuario",
+                Titulo = "NombreUsuario",
+                PropiedadDatos = "NombreUsuario",
+                Ancho = 90
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Nombre",
+                Titulo = "Nombre Completo",
+                PropiedadDatos = "Nombre",
+                Ancho = 150
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Perfil",
+                Titulo = "Perfil",
+                PropiedadDatos = "Perfil",
+                Ancho = 80
+            }
         };
 
         public List<AccionConfig> Acciones => new List<AccionConfig>
@@ -78,7 +99,7 @@ namespace ElectroHogar.Presentacion.Utils
 
         public string Titulo => "Proveedores Activos";
         public string CampoBusqueda => "CUIT o Nombre";
-        public List<string> CamposBusqueda => new List<string> { "Cuit", "NombreCompleto" };
+        public List<string> CamposBusqueda => new List<string> { "Cuit", "Nombre" };
         public string NombreIdentificador => "Proveedor";
         public object Service => _service;
 
@@ -87,11 +108,31 @@ namespace ElectroHogar.Presentacion.Utils
             new ColumnaConfig
             {
                 Nombre = "Id",
-                Titulo = "ID",
+                Titulo = "Id",
                 PropiedadDatos = "Id",
                 Ancho = 100
             },
-            // ... resto de columnas
+            new ColumnaConfig
+            {
+                Nombre = "Nombre",
+                Titulo = "Nombre",
+                PropiedadDatos = "Nombre",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Apellido",
+                Titulo = "Apellido",
+                PropiedadDatos = "Apellido",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "CUIT",
+                Titulo = "CUIT",
+                PropiedadDatos = "CUIT",
+                Ancho = 100
+            },
         };
 
         public List<AccionConfig> Acciones => new List<AccionConfig>

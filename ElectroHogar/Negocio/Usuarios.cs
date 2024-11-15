@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Persistencia;
@@ -185,11 +186,16 @@ namespace ElectroHogar.Negocio
                 throw new Exception("Solo se pueden crear usuarios con perfil Vendedor o Supervisor");
         }
 
-        public List<User> BuscarUsuariosActivos()
+        public List<User> ObtenerActivos()
         {
             try
             {
-                return _usuarioWS.BuscarUsuariosActivos();
+                return _usuarioWS.BuscarUsuariosActivos()
+                    .Select(u => {
+                        u.Perfil = ((PerfilUsuario)u.Host).ToString();
+                        return u;
+                    })
+                    .ToList();
             }
             catch (Exception ex)
             {
