@@ -7,9 +7,11 @@ using ElectroHogar.Persistencia.Utils;
 namespace ElectroHogar.Persistencia
 {
     public class ProductosWS : BaseWS
-    {
+    { 
+        public readonly string adminId;
         public ProductosWS() : base()
         {
+            adminId = _adminId;
         }
 
         public List<ProductoList> ObtenerProductos()

@@ -33,12 +33,12 @@ namespace ElectroHogar.Presentacion.Forms
             var panelSuperior = FormHelper.CrearPanelSuperior("Gestión de Usuarios");
             this.Controls.Add(panelSuperior);
 
-            // Botón Ver Usuarios Activos
             var btnUsuariosActivos = FormHelper.CrearBotonPrimario("Ver Usuarios Activos");
             btnUsuariosActivos.Location = new Point(FormHelper.MARGEN, panelSuperior.Bottom + 20);
             btnUsuariosActivos.Click += (s, e) => {
-                var formUsuariosActivos = new ActiveUsersForm();
-                formUsuariosActivos.ShowDialog();
+                var configUsuarios = new UsuariosListadoConfig();
+                var formProveedores = new BaseListForm(configUsuarios);
+                formProveedores.ShowDialog();
             };
 
             var btnVolver = FormHelper.CrearBotonPrimario("Volver", 100);
@@ -65,12 +65,10 @@ namespace ElectroHogar.Presentacion.Forms
                 Padding = new Padding(FormHelper.MARGEN)
             };
 
-            // Header del acordeón
             var btnAcordeon = FormHelper.CrearBotonPrimario("+ Agregar Nuevo Usuario", FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 2));
             btnAcordeon.Location = new Point(FormHelper.MARGEN, 10);
             btnAcordeon.Click += (s, e) => ToggleAcordeon();
 
-            // Contenido del acordeón (inicialmente oculto)
             var panelContenido = new Panel
             {
                 Width = FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 2),
@@ -91,7 +89,6 @@ namespace ElectroHogar.Presentacion.Forms
             var txtUsername = FormHelper.CrearCampoTexto("Nombre de Usuario:", "txtUsername", ref currentY, panelContenido);
             var cmbPerfil = FormHelper.CrearComboPerfil("Perfil:", "cmbPerfil", ref currentY, panelContenido);
 
-            // Botón guardar
             var btnGuardar = FormHelper.CrearBotonPrimario("Guardar Usuario", FormHelper.ANCHO_FORM - (FormHelper.MARGEN * 3));
             btnGuardar.Location = new Point(FormHelper.MARGEN, currentY + 20);
             btnGuardar.Click += (s, e) => GuardarUsuario();
@@ -108,7 +105,7 @@ namespace ElectroHogar.Presentacion.Forms
         private void ToggleAcordeon()
         {
             acordeonAbierto = !acordeonAbierto;
-            panelAltaUsuario.Controls[1].Visible = acordeonAbierto;  // panelContenido
+            panelAltaUsuario.Controls[1].Visible = acordeonAbierto;
             var btnAcordeon = (Button)panelAltaUsuario.Controls[0];
             btnAcordeon.Text = acordeonAbierto ? "- Cerrar" : "+ Agregar Nuevo Usuario";
         }

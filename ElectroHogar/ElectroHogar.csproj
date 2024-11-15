@@ -54,25 +54,43 @@
     <Compile Include="Datos\ClienteWS.cs" />
     <Compile Include="Datos\ProductoWS.cs" />
     <Compile Include="Datos\ProveedorWS.cs" />
+    <Compile Include="Datos\VentaWS.cs" />
+    <Compile Include="Negocio\Clientes.cs" />
+    <Compile Include="Negocio\Productos.cs" />
+    <Compile Include="Negocio\Proveedores.cs" />
     <Compile Include="Negocio\Usuarios.cs" />
     <Compile Include="Negocio\Perfiles.cs" />
     <Compile Include="Negocio\Utils\UsuariosUtils.cs" />
+    <Compile Include="Negocio\Ventas.cs" />
+    <Compile Include="Persistencia\WebService\VentasWS.cs" />
     <Compile Include="Persistencia\WebService\BaseWS.cs" />
     <Compile Include="Persistencia\DataBase\ClavesTemporalesDB.cs" />
     <Compile Include="Persistencia\WebService\ClientesWS.cs" />
     <Compile Include="Persistencia\WebService\ProductosWS.cs" />
     <Compile Include="Persistencia\WebService\ProveedoresWS.cs" />
-    <Compile Include="Presentacion\Forms\ActiveUsersForm .cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentacion\Forms\ActiveUsersForm .Designer.cs">
-      <DependentUpon>ActiveUsersForm .cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentacion\Forms\CambiarPasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentacion\Forms\CambiarPasswordForm.Designer.cs">
       <DependentUpon>CambiarPasswordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\BaseListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\BaseListForm.Designer.cs">
+      <DependentUpon>BaseListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ClienteEdicionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ClienteEdicionForm.Designer.cs">
+      <DependentUpon>ClienteEdicionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\DevolucionManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\DevolucionManagerForm.Designer.cs">
+      <DependentUpon>DevolucionManagerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Forms\HomeForm.cs">
       <SubType>Form</SubType>
@@ -86,14 +104,57 @@
     <Compile Include="Presentacion\Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Forms\ProductoManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ProductoManagerForm.Designer.cs">
+      <DependentUpon>ProductoManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ProductosMasVendidosForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ProductosMasVendidosForm.Designer.cs">
+      <DependentUpon>ProductosMasVendidosForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ProveedorManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ProveedorManagerForm.Designer.cs">
+      <DependentUpon>ProveedorManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\RemitoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\RemitoForm.Designer.cs">
+      <DependentUpon>RemitoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\StockCriticoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\StockCriticoForm.Designer.cs">
+      <DependentUpon>StockCriticoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Forms\UserManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentacion\Forms\UserManagerForm.Designer.cs">
       <DependentUpon>UserManagerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Forms\VentasManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\VentasManagerForm.Designer.cs">
+      <DependentUpon>VentasManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\VentasPorVendedorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\VentasPorVendedorForm.Designer.cs">
+      <DependentUpon>VentasPorVendedorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Utils\AplicationManager.cs" />
     <Compile Include="Presentacion\Utils\FormHelper.cs" />
+    <Compile Include="Presentacion\Utils\IListadoConfiguracion.cs" />
     <Compile Include="Presentacion\Utils\UserViewModel.cs" />
     <Compile Include="Presentacion\Utils\Validations.cs" />
     <Compile Include="Negocio\LoginNegocio.cs" />

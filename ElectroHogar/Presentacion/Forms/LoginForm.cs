@@ -17,7 +17,6 @@ namespace ElectroHogar.Presentacion.Forms
             InitializeComponent();
             _loginNegocio = LoginNegocio.Instance;
 
-            // Inicializar label de estado
             lblEstado = FormHelper.CrearLabelEstado();
             this.Controls.Add(lblEstado);
 
@@ -104,7 +103,6 @@ namespace ElectroHogar.Presentacion.Forms
 
             this.Controls.Add(btnCambiarPass);
 
-            // Ajustar la posición del label de estado
             lblEstado.Location = new System.Drawing.Point(
                 lblEstado.Location.X,
                 btnCambiarPass.Bottom + 10
@@ -141,7 +139,6 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void ManejarLoginExitoso(LoginResult resultado)
         {
-            // Si el login falló por requerir cambio de contraseña temporal
             if (resultado.TipoError == LoginErrorTipo.RequiereCambioContraseña)
             {
                 var cambioForm = new CambiarPasswordForm(txtUsuario.Text, true);
@@ -150,7 +147,6 @@ namespace ElectroHogar.Presentacion.Forms
                     FormHelper.MostrarEstado(lblEstado, "Debe cambiar su contraseña temporal antes de continuar", true);
                     return;
                 }
-                // Después de cambiar la contraseña, limpiar y solicitar nuevo login
                 txtPassword.Clear();
                 txtPassword.Focus();
                 FormHelper.MostrarEstado(lblEstado, "Por favor, inicie sesión con su nueva contraseña", false);

@@ -62,9 +62,9 @@ namespace ElectroHogar.Persistencia
             DeserializarRespuesta<object>(response);
         }
 
-        public void BajaUsuario(Guid idUsuario)
+        public void BajaUsuario(Guid IdUsuario)
         {
-            var permisos = new { id = idUsuario.ToString(), idUsuario = _adminId };
+            var permisos = new { id = IdUsuario.ToString(), idUsuario = _adminId };
             var response = WebHelper.DeleteWithBody("Usuario/BajaUsuario", JsonConvert.SerializeObject(permisos));
             DeserializarRespuesta<object>(response);
         }

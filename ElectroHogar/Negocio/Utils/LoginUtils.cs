@@ -1,4 +1,3 @@
-using System;
 using ElectroHogar.Datos;
 
 namespace ElectroHogar.Negocio.Utils

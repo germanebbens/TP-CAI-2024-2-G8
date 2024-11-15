@@ -9,7 +9,6 @@ namespace ElectroHogar.Presentacion.Utils
 {
     public static class FormHelper
     {
-        // Colores corporativos
         public static Color ColorPrimario = Color.FromArgb(0, 122, 204);
         public static Color ColorFondoTextBox = Color.FromArgb(240, 248, 255);
         public static Font FuenteNormal = new Font("Segoe UI", 9.75F);
@@ -140,7 +139,7 @@ namespace ElectroHogar.Presentacion.Utils
 
             var txt = new TextBox
             {
-                Name = nombre, // Asignar el nombre al control
+                Name = nombre,
                 Location = new Point(FormHelper.MARGEN, lbl.Bottom + 5),
                 Width = container.Width - (FormHelper.MARGEN * 2)
             };
@@ -190,7 +189,6 @@ namespace ElectroHogar.Presentacion.Utils
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
 
-            // Agregar los perfiles permitidos (solo Vendedor y Supervisor según la lógica de negocio)
             cmb.DisplayMember = "Text";
             cmb.ValueMember = "Value";
 

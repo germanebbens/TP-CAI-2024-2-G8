@@ -16,6 +16,7 @@ namespace ElectroHogar.Datos
         public int Dni { get; set; }
         public string NombreUsuario { get; set; }
         public int Host { get; set; }
+        public string Perfil { get; set; }
     }
     public class AddUser
     {
@@ -42,4 +43,5 @@ namespace ElectroHogar.Datos
         public Guid Id { get; set; }
         public Guid IdUsuario { get; set; }
     }
+
 }
