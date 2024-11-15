@@ -43,4 +43,5 @@ namespace ElectroHogar.Datos
         public Guid Id { get; set; }
         public Guid IdUsuario { get; set; }
     }
+
 }

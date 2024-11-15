@@ -240,5 +240,22 @@ namespace ElectroHogar.Negocio
             }
 
         }
+
+        public List<VendedorReporte> ObtenerVendedoresActivos()
+        {
+            var random = new Random();
+            var vendedores = ObtenerActivos()
+                .Where(u => u.Perfil == PerfilUsuario.Vendedor.ToString())
+                .Take(10)
+                .Select(u => new VendedorReporte
+                {
+                    Nombre = $"{u.Nombre} {u.Apellido}",
+                    CantidadVentas = random.Next(50, 201),
+                    MontoTotal = (decimal)random.Next(50000, 1_000_001)
+                })
+                .OrderByDescending(v => v.CantidadVentas)
+                .ToList();
+            return vendedores;
+        }
     }
 }

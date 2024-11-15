@@ -110,6 +110,12 @@
     <Compile Include="Presentacion\Forms\ProductoManagerForm.Designer.cs">
       <DependentUpon>ProductoManagerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Forms\ProductosMasVendidosForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ProductosMasVendidosForm.Designer.cs">
+      <DependentUpon>ProductosMasVendidosForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Forms\ProveedorManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +145,12 @@
     </Compile>
     <Compile Include="Presentacion\Forms\VentasManagerForm.Designer.cs">
       <DependentUpon>VentasManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\VentasPorVendedorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\VentasPorVendedorForm.Designer.cs">
+      <DependentUpon>VentasPorVendedorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Utils\AplicationManager.cs" />
     <Compile Include="Presentacion\Utils\FormHelper.cs" />

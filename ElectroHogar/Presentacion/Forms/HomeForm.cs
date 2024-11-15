@@ -89,6 +89,12 @@ namespace ElectroHogar.Presentacion.Forms
                 case "StockReportForm":
                     formulario = new StockCriticoForm();
                     break;
+                case "VentasReportForm":
+                    formulario = new VentasPorVendedorForm();
+                    break;
+                case "ProductosReportForm":
+                    formulario = new ProductosMasVendidosForm();
+                    break;
             }
 
             if (formulario != null)

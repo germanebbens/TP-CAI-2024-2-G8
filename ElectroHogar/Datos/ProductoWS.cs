@@ -40,4 +40,12 @@ namespace ElectroHogar.Datos
         public double Precio { get; set; }
         public int Stock { get; set; }
     }
+
+    public class ProductoMasVendido
+    {
+        public string Nombre { get; set; }
+        public int CantidadVentas { get; set; }
+        public decimal PrecioUnitario { get; set; }
+        public decimal MontoTotal { get; set; }
+    }
 }

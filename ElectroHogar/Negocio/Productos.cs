@@ -166,5 +166,23 @@ namespace ElectroHogar.Negocio
             // Esto podría ajustarse según la lógica de negocio 
             return stockActual <= (STOCK_MAXIMO_NORMAL * PORCENTAJE_STOCK_CRITICO);
         }
+
+        public List<ProductoMasVendido> ObtenerProductosMasVendidos()
+        {
+            var random = new Random();
+            var productos = ObtenerActivos()
+                .Take(20)
+                .Select(p => new ProductoMasVendido
+                {
+                    Nombre = p.Nombre,
+                    CantidadVentas = random.Next(50, 201),
+                    PrecioUnitario = (decimal)p.Precio,
+                    MontoTotal = (decimal)(p.Precio * random.Next(50, 201))
+                })
+                .OrderByDescending(p => p.CantidadVentas)
+                .ToList();
+
+            return productos;
+        }
     }
 }

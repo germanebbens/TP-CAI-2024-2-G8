@@ -47,4 +47,11 @@ namespace ElectroHogar.Datos
         public Categoria Categoria { get; set; }
         public double Subtotal => Cantidad * Precio;
     }
+
+    public class VendedorReporte
+    {
+        public string Nombre { get; set; }
+        public int CantidadVentas { get; set; }
+        public decimal MontoTotal { get; set; }
+    }
 }
