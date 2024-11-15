@@ -86,6 +86,9 @@ namespace ElectroHogar.Presentacion.Forms
                 case "DevolucionesForm":
                     formulario = new DevolucionManagerForm();
                     break;
+                case "StockReportForm":
+                    formulario = new StockCriticoForm();
+                    break;
             }
 
             if (formulario != null)

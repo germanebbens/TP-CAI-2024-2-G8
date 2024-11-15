@@ -91,15 +91,7 @@ namespace ElectroHogar.Presentacion.Forms
 
         private void ConfigurarColumnas()
         {
-            var columnas = _config.Columnas.Select(c => new DataGridViewTextBoxColumn
-            {
-                Name = c.Nombre,
-                HeaderText = c.Titulo,
-                DataPropertyName = c.PropiedadDatos,
-                Width = c.Ancho
-            }).ToList<DataGridViewColumn>();
-
-            columnas.AddRange(_config.Acciones.Select(a => new DataGridViewButtonColumn
+            var columnas = _config.Acciones.Select(a => new DataGridViewButtonColumn
             {
                 Name = a.Nombre,
                 HeaderText = "Acción",
@@ -107,6 +99,14 @@ namespace ElectroHogar.Presentacion.Forms
                 UseColumnTextForButtonValue = true,
                 Width = 85,
                 FlatStyle = FlatStyle.Flat
+            }).ToList<DataGridViewColumn>();
+
+            columnas.AddRange(_config.Columnas.Select(c => new DataGridViewTextBoxColumn
+            {
+                Name = c.Nombre,
+                HeaderText = c.Titulo,
+                DataPropertyName = c.PropiedadDatos,
+                Width = c.Ancho
             }));
 
             dgvItems.Columns.AddRange(columnas.ToArray());

@@ -122,6 +122,12 @@
     <Compile Include="Presentacion\Forms\RemitoForm.Designer.cs">
       <DependentUpon>RemitoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Forms\StockCriticoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\StockCriticoForm.Designer.cs">
+      <DependentUpon>StockCriticoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Forms\UserManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
