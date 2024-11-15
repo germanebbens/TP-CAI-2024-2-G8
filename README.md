@@ -9,6 +9,18 @@ Cuatrimestre: 2do Cuatrimestre de 2024
 La empresa EletroHogar SA, dedicada a la compra-venta de artículos del hogar, ha lanzado una licitación para desarrollar un software que permita administrar su stock y operaciones. La empresa de software ha sido la adjudicataria de este proyecto.
 Actualmente, el proceso de gestión es burocrático y parcialmente manual, con dificultades para llevar un adecuado control del stock, las ventas y la información de clientes y proveedores.
 
+### Diagramas
+#### Caso de uso Login
+![Alt text](caso_uso_login.png?raw=true "Caso de uso Login")
+
+#### Diagrama de clases
+![Alt text](diagrama_clases.png?raw=true "Diagrama de clases")
+
+#### Diagrama de secuencia
+![Alt text](diagrama_secuencia.png?raw=true "Diagrama de secuencia")
+
+
+
 ### Requerimientos Funcionales
 El proyecto busca automatizar y modernizar los procesos clave de la empresa, incluyendo:
 
