@@ -8,7 +8,7 @@ using ElectroHogar.Presentacion.Utils;
 
 namespace ElectroHogar.Presentacion.Forms
 {
-    public partial class GenericListForm : Form
+    public partial class BaseListForm : Form
     {
         private readonly IListadoConfiguracion _config;
         private readonly Label lblEstado;
@@ -16,7 +16,7 @@ namespace ElectroHogar.Presentacion.Forms
         private DataGridView dgvItems;
         private dynamic _todosItems;
 
-        public GenericListForm(IListadoConfiguracion config)
+        public BaseListForm(IListadoConfiguracion config)
         {
             InitializeComponent();
             _config = config;

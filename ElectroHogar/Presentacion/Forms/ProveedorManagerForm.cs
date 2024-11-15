@@ -37,7 +37,7 @@ namespace ElectroHogar.Presentacion.Forms
             btnProveedoresActivos.Location = new Point(FormHelper.MARGEN, panelSuperior.Bottom + 20);
             btnProveedoresActivos.Click += (s, e) => {
                 var configProveedores = new ProveedoresListadoConfig();
-                var formProveedores = new GenericListForm(configProveedores);
+                var formProveedores = new BaseListForm(configProveedores);
                 formProveedores.ShowDialog();
             };
 

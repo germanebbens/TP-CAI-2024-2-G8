@@ -1,6 +1,6 @@
 ﻿namespace ElectroHogar.Presentacion.Forms
 {
-    partial class GenericListForm
+    partial class BaseListForm
     {
         /// <summary>
         /// Required designer variable.

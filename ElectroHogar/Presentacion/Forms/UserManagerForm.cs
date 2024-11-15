@@ -37,7 +37,7 @@ namespace ElectroHogar.Presentacion.Forms
             btnUsuariosActivos.Location = new Point(FormHelper.MARGEN, panelSuperior.Bottom + 20);
             btnUsuariosActivos.Click += (s, e) => {
                 var configUsuarios = new UsuariosListadoConfig();
-                var formProveedores = new GenericListForm(configUsuarios);
+                var formProveedores = new BaseListForm(configUsuarios);
                 formProveedores.ShowDialog();
             };
 

@@ -1,7 +1,6 @@
 ﻿using ElectroHogar.Negocio;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace ElectroHogar.Presentacion.Utils
@@ -15,6 +14,8 @@ namespace ElectroHogar.Presentacion.Utils
         List<AccionConfig> Acciones { get; }
         string NombreIdentificador { get; }
         object Service { get; }
+        bool PermitirEdicion { get; }
+        string[] CamposEditables { get; }
     }
 
     public class ColumnaConfig
@@ -23,6 +24,7 @@ namespace ElectroHogar.Presentacion.Utils
         public string Titulo { get; set; }
         public string PropiedadDatos { get; set; }
         public int Ancho { get; set; }
+        public bool Editable { get; set; }
     }
 
     public class AccionConfig
@@ -37,6 +39,8 @@ namespace ElectroHogar.Presentacion.Utils
     public class UsuariosListadoConfig : IListadoConfiguracion
     {
         private readonly Usuarios _service = new Usuarios();
+        public bool PermitirEdicion { get; set; }
+        public string[] CamposEditables { get; set; }
 
         public string Titulo => "Usuarios Activos";
         public string CampoBusqueda => "ID o Username";
@@ -96,6 +100,8 @@ namespace ElectroHogar.Presentacion.Utils
     public class ProveedoresListadoConfig : IListadoConfiguracion
     {
         private readonly Proveedores _service = new Proveedores();
+        public bool PermitirEdicion { get; set; }
+        public string[] CamposEditables { get; set; }
 
         public string Titulo => "Proveedores Activos";
         public string CampoBusqueda => "CUIT o Nombre";
@@ -151,25 +157,48 @@ namespace ElectroHogar.Presentacion.Utils
         };
     }
 
-    public class ClientesListadoConfig// : IListadoConfiguracion
+    public class ClientesListadoConfig : IListadoConfiguracion
     {
-       // private readonly Clientes _service = new Clientes();
+        private readonly Clientes _service = new Clientes();
+        public bool PermitirEdicion { get; set; }
+        public string[] CamposEditables { get; set; }
 
         public string Titulo => "Clientes";
-        public string CampoBusqueda => "DNI o Nombre";
+        public string CampoBusqueda => "Id, Nombre, Email";
+        public List<string> CamposBusqueda => new List<string> { "Id", "Nombre", "Email" };
         public string NombreIdentificador => "Cliente";
-       // public object Service => _service;
+        public object Service => _service;
 
         public List<ColumnaConfig> Columnas => new List<ColumnaConfig>
         {
-            new ColumnaConfig
-            {
+            new ColumnaConfig {
                 Nombre = "Id",
                 Titulo = "ID",
                 PropiedadDatos = "Id",
-                Ancho = 100
+                Ancho = 100,
+                Editable = false
             },
-            // ... resto de columnas
+            new ColumnaConfig {
+                Nombre = "Nombre",
+                Titulo = "Nombre",
+                PropiedadDatos = "Nombre",
+                Ancho = 100,
+                Editable = false
+            },
+            new ColumnaConfig {
+                Nombre = "Direccion",
+                Titulo = "Dirección",
+                PropiedadDatos = "Direccion",
+                Ancho = 150,
+                Editable = true
+            },
+            new ColumnaConfig {
+                Nombre = "Email",
+                Titulo = "Email",
+                PropiedadDatos = "Email",
+                Ancho = 150,
+                Editable = true
+            },
         };
 
         public List<AccionConfig> Acciones => new List<AccionConfig>
