@@ -1,4 +1,5 @@
-﻿using ElectroHogar.Negocio;
+﻿using ElectroHogar.Datos;
+using ElectroHogar.Negocio;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -14,8 +15,6 @@ namespace ElectroHogar.Presentacion.Utils
         List<AccionConfig> Acciones { get; }
         string NombreIdentificador { get; }
         object Service { get; }
-        bool PermitirEdicion { get; }
-        string[] CamposEditables { get; }
     }
 
     public class ColumnaConfig
@@ -39,8 +38,6 @@ namespace ElectroHogar.Presentacion.Utils
     public class UsuariosListadoConfig : IListadoConfiguracion
     {
         private readonly Usuarios _service = new Usuarios();
-        public bool PermitirEdicion { get; set; }
-        public string[] CamposEditables { get; set; }
 
         public string Titulo => "Usuarios Activos";
         public string CampoBusqueda => "ID o Username";
@@ -100,8 +97,6 @@ namespace ElectroHogar.Presentacion.Utils
     public class ProveedoresListadoConfig : IListadoConfiguracion
     {
         private readonly Proveedores _service = new Proveedores();
-        public bool PermitirEdicion { get; set; }
-        public string[] CamposEditables { get; set; }
 
         public string Titulo => "Proveedores Activos";
         public string CampoBusqueda => "CUIT o Nombre";
@@ -157,47 +152,44 @@ namespace ElectroHogar.Presentacion.Utils
         };
     }
 
-    public class ClientesListadoConfig : IListadoConfiguracion
+    public class ProveedoresSeleccionListadoConfig : IListadoConfiguracion
     {
-        private readonly Clientes _service = new Clientes();
-        public bool PermitirEdicion { get; set; }
-        public string[] CamposEditables { get; set; }
+        private readonly Proveedores _service = new Proveedores();
+        private readonly Action<ProveedorList> _onSeleccion;
 
-        public string Titulo => "Clientes";
-        public string CampoBusqueda => "Id, Nombre, Email";
-        public List<string> CamposBusqueda => new List<string> { "Id", "Nombre", "Email" };
-        public string NombreIdentificador => "Cliente";
+        public ProveedoresSeleccionListadoConfig(Action<ProveedorList> onSeleccion)
+        {
+            _onSeleccion = onSeleccion;
+        }
+
+        public string Titulo => "Seleccionar Proveedor";
+        public string CampoBusqueda => "CUIT o Nombre";
+        public List<string> CamposBusqueda => new List<string> { "Cuit", "Nombre" };
+        public string NombreIdentificador => "Proveedor";
         public object Service => _service;
 
         public List<ColumnaConfig> Columnas => new List<ColumnaConfig>
         {
-            new ColumnaConfig {
+            new ColumnaConfig
+            {
                 Nombre = "Id",
-                Titulo = "ID",
+                Titulo = "Id",
                 PropiedadDatos = "Id",
-                Ancho = 100,
-                Editable = false
+                Ancho = 100
             },
-            new ColumnaConfig {
+            new ColumnaConfig
+            {
                 Nombre = "Nombre",
                 Titulo = "Nombre",
                 PropiedadDatos = "Nombre",
-                Ancho = 100,
-                Editable = false
+                Ancho = 100
             },
-            new ColumnaConfig {
-                Nombre = "Direccion",
-                Titulo = "Dirección",
-                PropiedadDatos = "Direccion",
-                Ancho = 150,
-                Editable = true
-            },
-            new ColumnaConfig {
-                Nombre = "Email",
-                Titulo = "Email",
-                PropiedadDatos = "Email",
-                Ancho = 150,
-                Editable = true
+            new ColumnaConfig
+            {
+                Nombre = "CUIT",
+                Titulo = "CUIT",
+                PropiedadDatos = "CUIT",
+                Ancho = 100
             },
         };
 
@@ -205,17 +197,22 @@ namespace ElectroHogar.Presentacion.Utils
         {
             new AccionConfig
             {
-                Nombre = "Modificar",
-                Texto = "Modificar",
+                Nombre = "Seleccionar",
+                Texto = "Seleccionar",
                 RequiereConfirmacion = false,
-                //Accion = (sender, e) => /* Abrir formulario de modificación */
-            },
-            new AccionConfig
-            {
-                Nombre = "Desactivar",
-                Texto = "Desactivar",
-                RequiereConfirmacion = true,
-                MensajeConfirmacion = "¿Está seguro que desea deshabilitar al cliente {0}?"
+                Accion = (row) => {
+                    var proveedorId = Guid.Parse(row.Cells["Id"].Value.ToString());
+                    var proveedor = _service.ObtenerProveedorPorId(proveedorId);
+                    _onSeleccion?.Invoke(proveedor);
+                
+                    // Obtener el formulario que contiene la fila y cerrarlo
+                    var form = row.DataGridView.FindForm();
+                    if (form != null)
+                    {
+                        form.DialogResult = DialogResult.OK;
+                        form.Close();
+                    }
+                }
             }
         };
     }
