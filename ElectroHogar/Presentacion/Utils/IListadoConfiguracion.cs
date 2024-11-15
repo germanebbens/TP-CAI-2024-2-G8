@@ -1,5 +1,6 @@
 ﻿using ElectroHogar.Datos;
 using ElectroHogar.Negocio;
+using ElectroHogar.Presentacion.Forms;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -206,6 +207,219 @@ namespace ElectroHogar.Presentacion.Utils
                     _onSeleccion?.Invoke(proveedor);
                 
                     // Obtener el formulario que contiene la fila y cerrarlo
+                    var form = row.DataGridView.FindForm();
+                    if (form != null)
+                    {
+                        form.DialogResult = DialogResult.OK;
+                        form.Close();
+                    }
+                }
+            }
+        };
+    }
+
+    public class ClienteSeleccionListadoConfig : IListadoConfiguracion
+    {
+        private readonly Clientes _service = new Clientes();
+        private readonly Action<ClienteList> _onSeleccion;
+
+        public ClienteSeleccionListadoConfig(Action<ClienteList> onSeleccion)
+        {
+            _onSeleccion = onSeleccion;
+        }
+
+        public string Titulo => "Seleccionar Cliente";
+        public string CampoBusqueda => "DNI o Nombre";
+        public List<string> CamposBusqueda => new List<string> { "DNI", "Nombre" };
+        public string NombreIdentificador => "Cliente";
+        public object Service => _service;
+
+        public List<ColumnaConfig> Columnas => new List<ColumnaConfig>
+        {
+            new ColumnaConfig
+            {
+                Nombre = "Id",
+                Titulo = "ID",
+                PropiedadDatos = "Id",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Nombre",
+                Titulo = "Nombre",
+                PropiedadDatos = "Nombre",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Apellido",
+                Titulo = "Apellido",
+                PropiedadDatos = "Apellido",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "DNI",
+                Titulo = "DNI",
+                PropiedadDatos = "Dni",
+                Ancho = 80
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Direccion",
+                Titulo = "Dirección",
+                PropiedadDatos = "Direccion",
+                Ancho = 150
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Telefono",
+                Titulo = "Teléfono",
+                PropiedadDatos = "Telefono",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Email",
+                Titulo = "Email",
+                PropiedadDatos = "Email",
+                Ancho = 150
+            }
+        };
+
+        public List<AccionConfig> Acciones => new List<AccionConfig>
+        {
+            new AccionConfig
+            {
+                Nombre = "Seleccionar",
+                Texto = "Seleccionar",
+                RequiereConfirmacion = false,
+                Accion = (row) => {
+                    var cliente = new ClienteList
+                    {
+                        Id = Guid.Parse(row.Cells["Id"].Value.ToString()),
+                        Nombre = row.Cells["Nombre"].Value.ToString(),
+                        Apellido = row.Cells["Apellido"].Value.ToString(),
+                        Dni = int.Parse(row.Cells["DNI"].Value.ToString()),
+                        Direccion = row.Cells["Direccion"].Value?.ToString(),
+                        Telefono = row.Cells["Telefono"].Value?.ToString(),
+                        Email = row.Cells["Email"].Value?.ToString()
+                    };
+
+                    _onSeleccion?.Invoke(cliente);
+                    var form = row.DataGridView.FindForm();
+                    if (form != null)
+                    {
+                        form.DialogResult = DialogResult.OK;
+                        form.Close();
+                    }
+                }
+            },
+            new AccionConfig
+            {
+                Nombre = "Editar",
+                Texto = "Editar",
+                RequiereConfirmacion = false,
+                Accion = (row) => {
+                    var clienteId = Guid.Parse(row.Cells["Id"].Value.ToString());
+                    var formEdicion = new ClienteEdicionForm(clienteId);
+                    if (formEdicion.ShowDialog() == DialogResult.OK)
+                    {
+                        var clienteActualizado = _service.ObtenerClientePorId(clienteId);
+                    
+                        // Actualizar los valores en la fila
+                        row.Cells["Direccion"].Value = clienteActualizado.Direccion;
+                        row.Cells["Telefono"].Value = clienteActualizado.Telefono;
+                        row.Cells["Email"].Value = clienteActualizado.Email;
+                    
+                        // Actualizar el objeto en la lista original
+                        var gridView = row.DataGridView;
+                        var items = (List<ClienteList>)gridView.Tag;
+                        var index = items.FindIndex(c => c.Id == clienteId);
+                        if (index >= 0)
+                        {
+                            items[index] = clienteActualizado;
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    public class ProductoSeleccionListadoConfig : IListadoConfiguracion
+    {
+        private readonly Productos _service = new Productos();
+        private readonly Action<ProductoList> _onSeleccion;
+
+        public ProductoSeleccionListadoConfig(Action<ProductoList> onSeleccion)
+        {
+            _onSeleccion = onSeleccion;
+        }
+
+        public string Titulo => "Seleccionar Producto";
+        public string CampoBusqueda => "Nombre";
+        public List<string> CamposBusqueda => new List<string> { "Nombre" };
+        public string NombreIdentificador => "Producto";
+        public object Service => _service;
+
+        public List<ColumnaConfig> Columnas => new List<ColumnaConfig>
+        {
+            new ColumnaConfig
+            {
+                Nombre = "Id",
+                Titulo = "ID",
+                PropiedadDatos = "Id",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Nombre",
+                Titulo = "Nombre",
+                PropiedadDatos = "Nombre",
+                Ancho = 150
+            },
+            new ColumnaConfig
+            {
+                Nombre = "IdCategoria",
+                Titulo = "Categoría",
+                PropiedadDatos = "IdCategoria",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Precio",
+                Titulo = "Precio",
+                PropiedadDatos = "Precio",
+                Ancho = 100
+            },
+            new ColumnaConfig
+            {
+                Nombre = "Stock",
+                Titulo = "Stock",
+                PropiedadDatos = "Stock",
+                Ancho = 100
+            }
+        };
+
+        public List<AccionConfig> Acciones => new List<AccionConfig>
+        {
+            new AccionConfig
+            {
+                Nombre = "Seleccionar",
+                Texto = "Seleccionar",
+                RequiereConfirmacion = false,
+                Accion = (row) => {
+                    var producto = new ProductoList
+                    {
+                        Id = Guid.Parse(row.Cells["Id"].Value.ToString()),
+                        Nombre = row.Cells["Nombre"].Value.ToString(),
+                        IdCategoria = (Categoria)row.Cells["IdCategoria"].Value,
+                        Precio = double.Parse(row.Cells["Precio"].Value.ToString()),
+                        Stock = int.Parse(row.Cells["Stock"].Value.ToString())
+                    };
+
+                    _onSeleccion?.Invoke(producto);
+
                     var form = row.DataGridView.FindForm();
                     if (form != null)
                     {

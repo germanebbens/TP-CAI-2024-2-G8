@@ -4,9 +4,7 @@ using System.Linq;
 using ElectroHogar.Datos;
 using ElectroHogar.Negocio.Utils;
 using ElectroHogar.Persistencia;
-using ElectroHogar.Persistencia.Utils;
 using ElectroHogar.Presentacion.Utils;
-using Newtonsoft.Json;
 
 namespace ElectroHogar.Negocio
 {
@@ -58,7 +56,7 @@ namespace ElectroHogar.Negocio
                     usuarioActivo.Id.ToString()
                 );
 
-                // DarBajaUsuario(usuarioActivo.Id);
+                DarBajaUsuario(usuarioActivo.Id);
                 return nuevoUsuario;
             }
             catch (Exception ex)

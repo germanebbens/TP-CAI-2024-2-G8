@@ -82,12 +82,12 @@ namespace ElectroHogar.Presentacion.Forms
             lblEstado.Location = new Point(FormHelper.MARGEN, btnVolver.Bottom + 10);
 
             this.Controls.AddRange(new Control[] {
-            panelSuperior,
-            panelBusqueda,
-            dgvItems,
-            btnVolver,
-            lblEstado
-        });
+                panelSuperior,
+                panelBusqueda,
+                dgvItems,
+                btnVolver,
+                lblEstado
+            });
 
             CargarItems();
         }
@@ -125,57 +125,50 @@ namespace ElectroHogar.Presentacion.Forms
 
             if (accion == null) return;
 
-            var buttonCell = row.Cells[columnName] as DataGridViewButtonCell;
-            if (row.Tag != null && row.Tag.ToString() == "Deshabilitado")
-            {
-                return;
-            }
-
-            if (accion.RequiereConfirmacion)
-            {
-                var itemId = Guid.Parse(row.Cells["Id"].Value.ToString());
-                var nombreItem = row.Cells[_config.Columnas[1].Nombre].Value.ToString();
-
-                var mensaje = string.Format(accion.MensajeConfirmacion, nombreItem);
-                if (MessageBox.Show(mensaje, "Confirmar Acción",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                {
-                    return;
-                }
-            }
-
             try
             {
+                if (accion.RequiereConfirmacion)
+                {
+                    var itemId = Guid.Parse(row.Cells["Id"].Value.ToString());
+                    var nombreItem = row.Cells[_config.Columnas[1].Nombre].Value.ToString();
+
+                    var mensaje = string.Format(accion.MensajeConfirmacion, nombreItem);
+                    if (MessageBox.Show(mensaje, "Confirmar Acción",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                }
+
                 accion.Accion?.Invoke(row);
 
-                // Marcar la fila como deshabilitada usando el Tag
-                row.Tag = "Deshabilitado";
-
-                // Deshabilitar la celda del botón
-                var buttonCell2 = row.Cells[columnName] as DataGridViewButtonCell;
-                if (buttonCell2 != null)
+                if (accion.Nombre.ToLower().Contains("desactiv"))
                 {
-                    // Cambiar el estilo de la celda
-                    var style = new DataGridViewCellStyle
+                    row.Tag = "Deshabilitado";
+
+                    var buttonCell = row.Cells[columnName] as DataGridViewButtonCell;
+                    if (buttonCell != null)
+                    {
+                        var style = new DataGridViewCellStyle
+                        {
+                            BackColor = Color.LightGray,
+                            ForeColor = Color.DarkGray,
+                            SelectionBackColor = Color.LightGray,
+                            SelectionForeColor = Color.DarkGray
+                        };
+                        buttonCell.Style = style;
+                    }
+
+                    row.DefaultCellStyle = new DataGridViewCellStyle
                     {
                         BackColor = Color.LightGray,
                         ForeColor = Color.DarkGray,
                         SelectionBackColor = Color.LightGray,
                         SelectionForeColor = Color.DarkGray
                     };
-                    buttonCell2.Style = style;
+
+                    FormHelper.MostrarEstado(lblEstado, $"{_config.NombreIdentificador} deshabilitado exitosamente", false);
                 }
-
-                // Aplicar estilo a toda la fila
-                row.DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.LightGray,
-                    ForeColor = Color.DarkGray,
-                    SelectionBackColor = Color.LightGray,
-                    SelectionForeColor = Color.DarkGray
-                };
-
-                FormHelper.MostrarEstado(lblEstado, $"{_config.NombreIdentificador} deshabilitado exitosamente", false);
             }
             catch (Exception ex)
             {

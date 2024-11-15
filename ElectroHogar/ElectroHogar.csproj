@@ -54,12 +54,15 @@
     <Compile Include="Datos\ClienteWS.cs" />
     <Compile Include="Datos\ProductoWS.cs" />
     <Compile Include="Datos\ProveedorWS.cs" />
+    <Compile Include="Datos\VentaWS.cs" />
     <Compile Include="Negocio\Clientes.cs" />
     <Compile Include="Negocio\Productos.cs" />
     <Compile Include="Negocio\Proveedores.cs" />
     <Compile Include="Negocio\Usuarios.cs" />
     <Compile Include="Negocio\Perfiles.cs" />
     <Compile Include="Negocio\Utils\UsuariosUtils.cs" />
+    <Compile Include="Negocio\Ventas.cs" />
+    <Compile Include="Persistencia\WebService\VentasWS.cs" />
     <Compile Include="Persistencia\WebService\BaseWS.cs" />
     <Compile Include="Persistencia\DataBase\ClavesTemporalesDB.cs" />
     <Compile Include="Persistencia\WebService\ClientesWS.cs" />
@@ -76,6 +79,12 @@
     </Compile>
     <Compile Include="Presentacion\Forms\BaseListForm.Designer.cs">
       <DependentUpon>BaseListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ClienteEdicionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\ClienteEdicionForm.Designer.cs">
+      <DependentUpon>ClienteEdicionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Forms\HomeForm.cs">
       <SubType>Form</SubType>
@@ -106,6 +115,12 @@
     </Compile>
     <Compile Include="Presentacion\Forms\UserManagerForm.Designer.cs">
       <DependentUpon>UserManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Forms\VentasManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Forms\VentasManagerForm.Designer.cs">
+      <DependentUpon>VentasManagerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Utils\AplicationManager.cs" />
     <Compile Include="Presentacion\Utils\FormHelper.cs" />
